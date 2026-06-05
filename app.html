@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1153,6 +1154,14 @@ kbd {
       <div id="sel-text" style="color:var(--text-faint);font-size:13px;font-style:italic;">— Klik node di peta —</div>
     </div>
 
+    <div id="note-panel" style="display:none; padding:11px 16px; background:rgba(255,168,88,0.06); border-bottom:1.5px solid var(--border); border-left:3px solid var(--accent); flex-shrink:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-faint);font-family:var(--font-head);">Catatan</span>
+        <button onclick="openNoteModal(sel)" style="font-size:10.5px;font-weight:600;color:var(--accent-hover);background:none;border:none;cursor:pointer;font-family:var(--font-head);">Edit</button>
+      </div>
+      <div id="note-panel-text" style="font-size:12.5px;color:var(--text-muted);line-height:1.6;font-family:var(--font-body);white-space:pre-wrap;"></div>
+    </div>
+
     <div id="ai-body">
       <div class="section-title">Saran Cabang</div>
       <div id="chips">
@@ -1180,10 +1189,24 @@ kbd {
   <div class="ctx-item" onclick="ctx_addChild()">＋ Tambah Cabang</div>
   <div class="ctx-item" onclick="ctx_edit()">✎ Edit Teks</div>
   <div class="ctx-item" onclick="ctx_color()">◉ Ganti Warna</div>
+  <div class="ctx-item" onclick="ctx_note()" id="ctx-note">📝 Tambah Catatan</div>
   <div class="ctx-sep"></div>
   <div class="ctx-item" onclick="ctx_expand()">✦ Kembangkan dengan AI</div>
   <div class="ctx-sep"></div>
   <div class="ctx-item danger" onclick="ctx_delete()">✕ Hapus Node</div>
+</div>
+
+<!-- NOTE MODAL -->
+<div class="modal-overlay" id="note-modal">
+  <div class="modal-box">
+    <h3 id="note-modal-title">Catatan</h3>
+    <textarea class="modal-input" id="note-inp" placeholder="Tulis catatan untuk node ini..." style="height:120px;resize:vertical;line-height:1.6;"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNoteModal()">Batal</button>
+      <button class="btn btn-danger" id="note-del-btn" onclick="deleteNote()" style="display:none;">Hapus</button>
+      <button class="btn btn-primary" onclick="saveNote()">Simpan</button>
+    </div>
+  </div>
 </div>
 
 <!-- EDIT MODAL -->
@@ -2025,6 +2048,25 @@ function renderNode(n, layer) {
   addG.addEventListener('click',e=>{e.stopPropagation(); openEdit(null,n.id);});
   g.appendChild(addG);
 
+  // Note indicator
+  if (n.note) {
+    const ni = svgEl('g');
+    ni.setAttribute('transform', `translate(6, -5)`);
+    ni.style.cursor = 'pointer';
+    const nc = svgEl('circle');
+    nc.setAttribute('cx','6'); nc.setAttribute('cy','6'); nc.setAttribute('r','6');
+    nc.setAttribute('fill','#FFA858');
+    const nt = svgEl('text');
+    nt.setAttribute('x','6'); nt.setAttribute('y','6');
+    nt.setAttribute('font-size','7'); nt.setAttribute('fill','#003B35');
+    nt.setAttribute('dominant-baseline','middle'); nt.setAttribute('text-anchor','middle');
+    nt.setAttribute('pointer-events','none'); nt.setAttribute('font-weight','700');
+    nt.textContent='✎';
+    ni.appendChild(nc); ni.appendChild(nt);
+    ni.addEventListener('click', e=>{ e.stopPropagation(); openNoteModal(n.id); });
+    g.appendChild(ni);
+  }
+
   // Events
   g.addEventListener('mousedown', e=>onNodeDown(e,n.id));
   g.addEventListener('click',     e=>{e.stopPropagation(); if(!didDrag) selectNode(n.id);});
@@ -2071,6 +2113,7 @@ function deselect(){
   document.getElementById('sel-text').textContent='— Klik node di peta —';
   document.getElementById('sel-text').style.cssText='font-size:13px;color:var(--text-faint);font-style:italic;';
   document.getElementById('chips').innerHTML='<span style="color:var(--text-faint);font-size:12.5px;font-style:italic;">Pilih node untuk saran AI</span>';
+  document.getElementById('note-panel').style.display = 'none';
   render();
 }
 
@@ -2193,6 +2236,68 @@ function ctx_edit(){hideCtx();openEdit(ctxId);}
 function ctx_delete(){hideCtx();sel=ctxId;deleteSelected();}
 function ctx_expand(){hideCtx();selectNode(ctxId);expandAI(ctxId);}
 function ctx_color(){hideCtx();openColorModal(ctxId);}
+function ctx_note(){hideCtx();openNoteModal(ctxId);}
+
+// ═══════════════════════════════════════════════
+//  NODE NOTES
+// ═══════════════════════════════════════════════
+let noteTargetId = null;
+
+function openNoteModal(id) {
+  if (!id || !nodes[id]) return;
+  noteTargetId = id;
+  const n = nodes[id];
+  document.getElementById('note-modal-title').textContent = `Catatan: ${n.text}`;
+  document.getElementById('note-inp').value = n.note || '';
+  document.getElementById('note-del-btn').style.display = n.note ? 'flex' : 'none';
+  document.getElementById('note-modal').classList.add('open');
+  setTimeout(() => document.getElementById('note-inp').focus(), 80);
+}
+
+function closeNoteModal() {
+  document.getElementById('note-modal').classList.remove('open');
+  noteTargetId = null;
+}
+
+function saveNote() {
+  const text = document.getElementById('note-inp').value.trim();
+  if (noteTargetId && nodes[noteTargetId]) {
+    snapshot();
+    nodes[noteTargetId].note = text || null;
+    render();
+    if (sel === noteTargetId) updateNotePanel(nodes[noteTargetId]);
+    scheduleAutoSave();
+    toast(text ? 'Catatan disimpan' : 'Catatan dihapus');
+  }
+  closeNoteModal();
+}
+
+function deleteNote() {
+  if (noteTargetId && nodes[noteTargetId]) {
+    snapshot();
+    nodes[noteTargetId].note = null;
+    render();
+    if (sel === noteTargetId) updateNotePanel(nodes[noteTargetId]);
+    scheduleAutoSave();
+    toast('Catatan dihapus');
+  }
+  closeNoteModal();
+}
+
+function updateNotePanel(n) {
+  const panel = document.getElementById('note-panel');
+  const text  = document.getElementById('note-panel-text');
+  if (n?.note) {
+    text.textContent = n.note;
+    panel.style.display = 'block';
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+document.getElementById('note-inp').addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeNoteModal();
+});
 
 // ═══════════════════════════════════════════════
 //  EDIT MODAL
