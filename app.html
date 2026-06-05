@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindara — Dari satu ide, ribuan kemungkinan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN TOKENS ────────────────────────────────────────── */
+:root {
+  --bg:            #FFFCF8;
+  --surface:       #F4EFE6;
+  --surface2:      #EAE3D6;
+  --border:        #D4C9B5;
+  --border-soft:   #E4DDD0;
+  --text:          #003B35;
+  --text-muted:    #4A7A72;
+  --text-faint:    #7A9E99;
+  --primary:       #003B35;
+  --primary-hover: #004F46;
+  --accent:        #FFA858;
+  --accent-hover:  #E8914A;
+  --danger:        #C0392B;
+  --success:       #1A6B5C;
+  --font-head:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:     'SF Pro Display','SF Pro',-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════
+   WELCOME SCREEN
+══════════════════════════════════════════════ */
+#welcome {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#welcome.hiding {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+.welcome-logo {
+  font-family: var(--font-head);
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -1.5px;
+  margin-bottom: 8px;
+}
+.welcome-logo .dot { color: var(--accent); }
+
+.welcome-tagline {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 44px;
+  font-family: var(--font-head);
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+.welcome-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 520px;
+  box-shadow: 0 8px 40px rgba(0,59,53,0.08);
+}
+
+.welcome-card h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 5px;
+  letter-spacing: -0.3px;
+}
+
+.welcome-card p {
+  font-size: 13px;
+  color: var(--text-faint);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.welcome-input-wrap {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+#welcome-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.15s;
+}
+#welcome-input:focus { border-color: var(--primary); }
+#welcome-input::placeholder { color: var(--text-faint); }
+
+.btn-generate {
+  padding: 12px 20px;
+  background: var(--primary);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: var(--font-head);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-generate:hover { background: var(--primary-hover); }
+.btn-generate:disabled { opacity: 0.5; cursor: wait; }
+
+.example-label {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-head);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+}
+
+.example-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 22px;
+}
+
+.example-chip {
+  padding: 6px 13px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.12s;
+}
+.example-chip:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.welcome-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.welcome-divider::before,
+.welcome-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+}
+
+.btn-blank {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.btn-blank:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+/* Generating state overlay */
+#gen-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 4000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+#gen-overlay.show { display: flex; }
+
+.gen-logo {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.8px;
+  margin-bottom: 8px;
+}
+.gen-logo .dot { color: var(--accent); }
+
+.gen-topic {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-family: var(--font-head);
+}
+
+.gen-progress {
+  width: 240px;
+  height: 3px;
+  background: var(--surface2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.gen-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 10px;
+  animation: progress 2s ease-in-out forwards;
+}
+@keyframes progress {
+  from { width: 0%; }
+  to   { width: 90%; }
+}
+
+.gen-status {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  font-family: var(--font-body);
+}
+
+/* ══════════════════════════════════════════════
+   TOOLBAR (hidden — replaced by floating UI)
+══════════════════════════════════════════════ */
+#toolbar { display: none !important; }
+.toolbar-sep { display: none; }
+
+/* ── FLOATING PILL (top center) ── */
+#floating-bar {
+  position: fixed;
+  top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 80;
+  display: none;
+  align-items: center; gap: 2px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 10px;
+  box-shadow: 0 4px 20px rgba(0,59,53,0.1);
+  white-space: nowrap;
+}
+#floating-bar.show { display: flex; }
+.fb-back {
+  width: 30px; height: 30px; border-radius: 7px;
+  border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--text-muted);
+  transition: background 0.12s;
+}
+.fb-back:hover { background: var(--surface); color: var(--text); }
+.fb-logo {
+  font-size: 15px; font-weight: 800;
+  color: var(--text); font-family: var(--font-head);
+  letter-spacing: -0.4px; padding: 0 6px;
+}
+.fb-logo .dot { color: var(--accent); }
+.fb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.fb-name {
+  font-size: 13.5px; font-weight: 600;
+  color: var(--text); font-family: var(--font-head);
+  max-width: 180px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  padding: 0 4px;
+}
+.fb-btn {
+  width: 30px; height: 30px; border-radius: 7px;
+  border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: var(--text-muted);
+  transition: background 0.12s;
+}
+.fb-btn:hover { background: var(--surface); color: var(--text); }
+.fb-btn.active { background: var(--surface2); color: var(--text); }
+.fb-ai {
+  background: var(--primary); color: var(--bg);
+  border-radius: 7px; padding: 0 12px; height: 30px;
+  font-size: 12.5px; font-weight: 700;
+  font-family: var(--font-head); border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: background 0.12s;
+}
+.fb-ai:hover { background: var(--primary-hover); }
+
+/* ── LEFT SIDEBAR ── */
+#left-sidebar {
+  position: fixed;
+  left: 12px; top: 50%; transform: translateY(-50%);
+  z-index: 80;
+  display: none;
+  flex-direction: column; align-items: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 4px 24px rgba(0,59,53,0.12);
+  gap: 0;
+}
+#left-sidebar.show { display: flex; }
+
+.ls-btn {
+  width: 48px; height: 48px; border-radius: 9px;
+  border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); transition: all 0.12s; position: relative;
+  flex-shrink: 0;
+}
+.ls-btn:hover { background: var(--surface); color: var(--text); }
+.ls-btn.active { background: var(--primary); color: #fff; }
+.ls-btn.disabled { opacity: 0.35; cursor: not-allowed; }
+.ls-btn.disabled:hover { background: transparent; color: var(--text-muted); }
+.ls-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.ls-sep { width: 36px; height: 1px; background: var(--border); margin: 2px 0; flex-shrink: 0; }
+
+/* AI button accent */
+.ls-btn.ls-ai { background: var(--accent); color: var(--text); }
+.ls-btn.ls-ai:hover { background: var(--accent-hover); color: #fff; }
+.ls-btn.ls-ai svg { stroke: currentColor; }
+
+/* Tooltip on hover */
+.ls-btn::after {
+  content: attr(data-tip);
+  position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%);
+  background: var(--text); color: var(--bg);
+  font-size: 11px; font-weight: 600; font-family: var(--font-head);
+  padding: 4px 8px; border-radius: 5px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity 0.15s;
+}
+.ls-btn:hover::after { opacity: 1; }
+
+.logo { display: none; }
+.toolbar-canvas-name { display: none; }
+
+.btn {
+  padding: 6px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.btn-primary  { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-accent   { background: var(--accent); color: var(--primary); border-color: var(--accent); font-weight: 600; }
+.btn-accent:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-ghost    { background: transparent; color: var(--text-muted); }
+.btn-ghost:hover { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn-danger   { background: transparent; color: var(--danger); }
+.btn-danger:hover { background: rgba(192,57,43,0.07); border-color: rgba(192,57,43,0.3); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.toolbar-spacer { flex: 1; }
+
+.api-badge {
+  font-size: 10px; padding: 2px 8px;
+  border-radius: 10px; font-weight: 600;
+  font-family: var(--font-head); letter-spacing: 0.2px;
+}
+.api-badge.set  { background: var(--success); color: var(--bg); }
+.api-badge.demo { background: var(--surface2); color: var(--text-faint); border: 1px solid var(--border); }
+
+/* ══════════════════════════════════════════════
+   MAIN LAYOUT
+══════════════════════════════════════════════ */
+#main { flex: 1; display: flex; overflow: hidden; }
+
+/* ── CANVAS ── */
+#canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  cursor: grab;
+}
+#canvas-wrap.panning { cursor: grabbing; }
+#canvas { width: 100%; height: 100%; }
+
+#canvas-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(0,59,53,0.1) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* Empty canvas hint */
+#empty-hint {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  display: none;
+}
+#empty-hint .hint-text {
+  font-family: var(--font-head);
+  font-size: 14px;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+/* ── NODE & EDGE ── */
+.edge { fill: none; stroke-width: 2px; stroke-linecap: round; }
+.node-group { cursor: pointer; }
+.node-body  { rx: 8; }
+.node-text  { font-family: var(--font-body); dominant-baseline: middle; text-anchor: middle; pointer-events: none; }
+.add-btn    { cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+.node-group:hover .add-btn { opacity: 1; }
+
+/* ── AI PANEL ── */
+#ai-panel {
+  width: 296px; min-width: 296px;
+  background: var(--surface);
+  border-left: 1.5px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: min-width 0.3s, width 0.3s;
+  overflow: hidden;
+}
+#ai-panel.hidden { width: 0; min-width: 0; }
+
+.panel-head {
+  padding: 13px 16px;
+  border-bottom: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+  flex-shrink: 0; background: var(--bg);
+}
+.panel-head h3 {
+  font-family: var(--font-head); font-size: 13.5px;
+  font-weight: 600; flex: 1; color: var(--primary); letter-spacing: -0.2px;
+}
+.ai-icon {
+  width: 28px; height: 28px;
+  background: var(--primary); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0; color: var(--accent);
+}
+
+/* Generate from panel */
+#panel-generate {
+  padding: 14px 16px;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+}
+.panel-gen-label {
+  font-size: 10.5px; color: var(--text-faint);
+  font-family: var(--font-head); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  margin-bottom: 8px;
+}
+.panel-gen-wrap { display: flex; gap: 6px; }
+#panel-gen-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 12.5px; color: var(--text);
+  font-family: var(--font-body); outline: none;
+}
+#panel-gen-input:focus { border-color: var(--primary); }
+#panel-gen-input::placeholder { color: var(--text-faint); }
+
+#sel-info {
+  padding: 11px 16px;
+  background: rgba(255,168,88,0.08);
+  border-bottom: 1.5px solid var(--border);
+  border-left: 3px solid var(--accent);
+  flex-shrink: 0;
+}
+.sel-label {
+  font-size: 10px; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  font-family: var(--font-head); font-weight: 600; margin-bottom: 3px;
+}
+#sel-text { font-size: 13.5px; font-weight: 600; color: var(--text); font-family: var(--font-head); }
+
+#ai-body { flex: 1; overflow-y: auto; padding: 14px 16px; }
+
+.section-title {
+  font-size: 10.5px; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.7px;
+  font-weight: 700; margin-bottom: 9px; font-family: var(--font-head);
+}
+
+.chip {
+  display: inline-flex; align-items: center;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 4px; padding: 5px 10px;
+  font-size: 12px; margin: 3px 2px; cursor: pointer;
+  transition: all 0.12s; color: var(--text); font-family: var(--font-body);
+}
+.chip:hover { background: var(--accent); border-color: var(--accent); color: var(--primary); font-weight: 600; }
+
+.ai-box {
+  background: var(--bg); border-radius: 6px;
+  padding: 11px 13px; font-size: 12.5px; line-height: 1.7;
+  color: var(--text-muted); margin-top: 8px;
+  border: 1.5px solid var(--border-soft); font-family: var(--font-body);
+}
+
+#ai-input-wrap {
+  padding: 10px 13px; border-top: 1.5px solid var(--border);
+  display: flex; gap: 7px; flex-shrink: 0; background: var(--bg);
+}
+#ai-q {
+  flex: 1; background: var(--surface2);
+  border: 1.5px solid var(--border); border-radius: 5px;
+  padding: 7px 11px; color: var(--text); font-size: 12.5px;
+  outline: none; resize: none; font-family: var(--font-body); line-height: 1.4;
+}
+#ai-q:focus { border-color: var(--primary); }
+#ai-q::placeholder { color: var(--text-faint); }
+
+/* ── CONTEXT MENU ── */
+#ctx {
+  position: fixed; background: var(--bg);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 4px; z-index: 1000; min-width: 175px;
+  box-shadow: 0 4px 20px rgba(0,59,53,0.1); display: none;
+}
+.ctx-item {
+  padding: 8px 11px; border-radius: 4px; cursor: pointer;
+  font-size: 12.5px; display: flex; align-items: center; gap: 8px;
+  color: var(--text); transition: background 0.1s; font-family: var(--font-body);
+}
+.ctx-item:hover { background: var(--surface); }
+.ctx-item.danger { color: var(--danger); }
+.ctx-item.danger:hover { background: rgba(192,57,43,0.06); }
+.ctx-sep { height: 1.5px; background: var(--border-soft); margin: 4px 0; }
+
+/* ── MODALS ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,59,53,0.18);
+  display: none; align-items: center; justify-content: center;
+  z-index: 2000; backdrop-filter: blur(3px);
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 24px; width: 380px;
+  box-shadow: 0 12px 40px rgba(0,59,53,0.12);
+}
+.modal-box h3 {
+  font-size: 15px; margin-bottom: 15px;
+  font-family: var(--font-head); font-weight: 700;
+  color: var(--primary); letter-spacing: -0.3px;
+}
+.modal-input {
+  width: 100%; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 10px 13px; color: var(--text); font-size: 14px;
+  outline: none; margin-bottom: 14px; font-family: var(--font-body);
+}
+.modal-input:focus { border-color: var(--primary); }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.modal-box p { font-size: 12.5px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+.modal-box label {
+  font-size: 11px; color: var(--text-faint); font-family: var(--font-head);
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  display: block; margin-bottom: 5px;
+}
+.modal-select {
+  width: 100%; background: var(--surface); border: 1.5px solid var(--border);
+  color: var(--text); border-radius: 6px; padding: 9px 11px;
+  font-size: 13px; margin-bottom: 13px; font-family: var(--font-body); outline: none;
+}
+.modal-select:focus { border-color: var(--primary); }
+
+/* ── COLOR MODAL ── */
+#color-modal .modal-box { width: 360px; }
+
+/* ── HUD ── */
+#zoom-hud {
+  position: absolute; bottom: 18px; left: 18px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 6px; padding: 5px 12px;
+  font-size: 11.5px; color: var(--text-muted);
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-head); box-shadow: 0 2px 8px rgba(0,59,53,0.06);
+}
+#zoom-hud .zoom-val { color: var(--primary); font-weight: 700; min-width: 38px; }
+
+#shortcuts {
+  position: absolute; bottom: 18px; right: 18px;
+  background: rgba(255,252,248,0.93); border: 1.5px solid var(--border-soft);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 11px; color: var(--text-faint); line-height: 2; font-family: var(--font-body);
+}
+kbd {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 3px; padding: 1px 6px;
+  font-family: var(--font-head); font-size: 10px; color: var(--text); font-weight: 600;
+}
+
+/* ── SPINNER & TOAST ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin {
+  width: 14px; height: 14px; border: 2px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block; vertical-align: middle;
+}
+
+@keyframes fadeSlide {
+  from { opacity:0; transform:translateX(-50%) translateY(6px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+.toast {
+  position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+  background: var(--primary); border-radius: 6px; padding: 9px 18px;
+  font-size: 12.5px; color: var(--bg); z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,59,53,0.2);
+  animation: fadeSlide 0.18s ease; white-space: nowrap; font-family: var(--font-body);
+}
+
+/* ── NODE APPEAR ANIMATION ── */
+@keyframes nodeAppear {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.node-new { animation: nodeAppear 0.25s ease forwards; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ══════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════ */
+#dashboard {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  overflow-y: auto; z-index: 200;
+}
+
+/* Navbar */
+.dash-nav {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 32px; height: 58px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 10; flex-shrink: 0;
+}
+.dash-logo { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; font-family: var(--font-head); }
+.dash-logo .dot { color: var(--accent); }
+.dash-map-badge {
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--surface2); border: 1px solid var(--border);
+  font-size: 11.5px; font-weight: 700; color: var(--text-muted); font-family: var(--font-head);
+}
+.dash-map-badge.full { background: rgba(255,168,88,0.12); border-color: rgba(255,168,88,0.35); color: var(--accent-hover); }
+.dash-nav-spacer { flex: 1; }
+.dash-user {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface2); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--text-muted); cursor: pointer;
+}
+
+/* Upgrade banner */
+.dash-banner {
+  display: none;
+  align-items: center; gap: 12px;
+  padding: 13px 32px;
+  background: rgba(255,168,88,0.08);
+  border-bottom: 1px solid rgba(255,168,88,0.25);
+}
+.dash-banner.show { display: flex; }
+.dash-banner-icon { font-size: 16px; }
+.dash-banner-text { font-size: 13.5px; color: var(--text); font-family: var(--font-head); }
+.dash-banner-text strong { font-weight: 700; color: var(--accent-hover); }
+.dash-banner-cta {
+  margin-left: auto; padding: 6px 16px;
+  background: var(--accent); color: var(--text);
+  border-radius: 6px; border: none; cursor: pointer;
+  font-size: 12.5px; font-weight: 700; font-family: var(--font-head);
+  white-space: nowrap; transition: background 0.12s;
+}
+.dash-banner-cta:hover { background: var(--accent-hover); color: #fff; }
+
+/* Body */
+.dash-body { max-width: 960px; margin: 0 auto; padding: 32px 32px 80px; width: 100%; }
+.dash-home-label { font-size: 15px; font-weight: 700; color: var(--text); font-family: var(--font-head); margin-bottom: 18px; }
+
+/* Quick actions */
+.dash-quick { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+.dash-qa {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--bg); cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--text-muted);
+  font-family: var(--font-head); transition: all 0.12s; white-space: nowrap;
+}
+.dash-qa:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
+.dash-qa.disabled { opacity: 0.45; cursor: not-allowed; }
+.dash-qa.disabled:hover { border-color: var(--border); color: var(--text-muted); background: var(--bg); }
+.qa-soon {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  background: var(--surface2); color: var(--text-faint);
+  padding: 2px 5px; border-radius: 4px; font-family: var(--font-head);
+}
+
+/* Canvas grid */
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+
+.canvas-card {
+  border-radius: 10px; border: 1.5px solid var(--border);
+  background: var(--bg); cursor: pointer;
+  transition: all 0.15s; overflow: hidden;
+}
+.canvas-card:hover { border-color: var(--text); box-shadow: 0 4px 16px rgba(0,59,53,0.09); transform: translateY(-1px); }
+
+.canvas-new {
+  border-style: dashed; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 160px; gap: 8px;
+}
+.canvas-new:hover { border-color: var(--text); background: var(--surface); }
+.card-new-icon { font-size: 24px; color: var(--text-faint); line-height: 1; }
+.card-new-label { font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); }
+
+.canvas-upgrade {
+  border-style: dashed; border-color: rgba(255,168,88,0.4);
+  background: rgba(255,168,88,0.04); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; min-height: 160px; gap: 8px;
+}
+.canvas-upgrade:hover { border-color: var(--accent); background: rgba(255,168,88,0.08); transform: translateY(-1px); }
+.canvas-upgrade .card-new-icon { color: var(--accent); }
+.canvas-upgrade .card-new-label { color: var(--accent-hover); }
+.card-limit-note { font-size: 11px; color: var(--text-faint); font-family: var(--font-head); }
+
+.canvas-existing { display: flex; flex-direction: column; }
+.card-icon-area {
+  height: 120px; background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: var(--border); position: relative;
+}
+.card-icon-area svg { opacity: 0.35; }
+.card-info { padding: 12px 14px 8px; flex: 1; }
+.card-name { font-size: 13.5px; font-weight: 700; color: var(--text); font-family: var(--font-head); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-meta { font-size: 11px; color: var(--text-faint); font-family: var(--font-head); }
+.card-actions { display: flex; gap: 6px; padding: 0 10px 10px; }
+.card-btn { flex: 1; padding: 6px; border-radius: 6px; border: 1.5px solid var(--border); background: transparent; cursor: pointer; font-size: 11.5px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); transition: all 0.12s; }
+.card-btn:hover { background: var(--surface); color: var(--text); }
+.card-btn-danger:hover { background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.3); color: var(--danger); }
+
+.toolbar-canvas-name { font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-head); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── MODALS ── */
+.dash-overlay { position: fixed; inset: 0; background: rgba(0,59,53,0.3); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 6000; }
+.dash-mbox { background: var(--bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 32px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,59,53,0.15); }
+.dash-mbox .dash-mtitle { font-size: 18px; font-weight: 800; color: var(--text); font-family: var(--font-head); letter-spacing: -0.4px; margin-bottom: 16px; }
+.dash-mbox input[type=text] { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); font-size: 14px; color: var(--text); font-family: var(--font-head); outline: none; transition: border-color 0.15s; margin-bottom: 16px; }
+.dash-mbox input[type=text]:focus { border-color: var(--text); }
+.dash-mactions { display: flex; gap: 8px; justify-content: flex-end; }
+.dash-mdesc { font-size: 14px; color: var(--text-muted); font-family: var(--font-head); line-height: 1.6; margin-bottom: 20px; }
+.upgrade-icon { font-size: 28px; color: var(--accent); margin-bottom: 12px; }
+.upgrade-features { background: var(--surface); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.uf-item { font-size: 13.5px; color: var(--text); font-family: var(--font-head); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════════════ -->
+<div id="dashboard">
+  <!-- Navbar -->
+  <div class="dash-nav">
+    <div class="dash-logo">Mindar<span class="dot">a</span></div>
+    <span class="dash-map-badge" id="dash-counter">0/3 Maps</span>
+    <div class="dash-nav-spacer"></div>
+    <div class="dash-user">👤</div>
+  </div>
+  <!-- Upgrade Banner (tampil saat limit tercapai) -->
+  <div class="dash-banner" id="dash-banner">
+    <span class="dash-banner-icon">⚠️</span>
+    <span class="dash-banner-text"><strong>Batas canvas gratis tercapai.</strong> Upgrade ke Pro untuk canvas tanpa batas.</span>
+    <button class="dash-banner-cta" onclick="showUpgradeModal()">Upgrade Sekarang →</button>
+  </div>
+  <!-- Body -->
+  <div class="dash-body">
+    <div class="dash-home-label">Home</div>
+    <!-- Quick Actions -->
+    <div class="dash-quick">
+      <button class="dash-qa" onclick="openNameModal()">
+        <span>＋</span> Canvas Baru
+      </button>
+      <button class="dash-qa disabled" title="Segera hadir">
+        <span>📄</span> PDF to Mindmap <span class="qa-soon">Soon</span>
+      </button>
+      <button class="dash-qa disabled" title="Segera hadir">
+        <span>▶️</span> YouTube to Mindmap <span class="qa-soon">Soon</span>
+      </button>
+      <button class="dash-qa disabled" title="Segera hadir">
+        <span>🖼️</span> Image to Mindmap <span class="qa-soon">Soon</span>
+      </button>
+    </div>
+    <!-- Canvas Grid -->
+    <div class="dash-grid" id="dash-grid"></div>
+  </div>
+</div>
+
+<!-- Name Modal -->
+<div id="name-modal" class="dash-overlay" style="display:none;">
+  <div class="dash-mbox">
+    <div class="dash-mtitle">Beri nama canvas baru</div>
+    <input type="text" id="name-input" placeholder="contoh: Strategi Pemasaran Q3..." maxlength="60" />
+    <div class="dash-mactions">
+      <button class="btn btn-ghost" onclick="closeNameModal()">Batal</button>
+      <button class="btn btn-primary" onclick="confirmCreateCanvas()">Buat Canvas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div id="upgrade-modal" class="dash-overlay" style="display:none;">
+  <div class="dash-mbox">
+    <div class="upgrade-icon">✦</div>
+    <div class="dash-mtitle">Batas canvas gratis tercapai</div>
+    <p class="dash-mdesc">Kamu sudah menggunakan 3 canvas gratis. Upgrade ke Mindara Pro untuk canvas tanpa batas.</p>
+    <div class="upgrade-features">
+      <div class="uf-item">→ Canvas tidak terbatas</div>
+      <div class="uf-item">→ Export ke PNG &amp; PDF</div>
+      <div class="uf-item">→ Sharing via link publik</div>
+      <div class="uf-item">→ Kolaborasi tim (segera)</div>
+    </div>
+    <a href="https://forms.gle/EF9WQKcZHfSrvgst5" target="_blank" class="btn btn-accent" style="text-decoration:none;display:block;text-align:center;margin-top:20px;padding:12px 0;border-radius:8px;font-weight:700;font-size:14px;">
+      Daftar Early Access Pro →
+    </a>
+    <button class="btn btn-ghost" onclick="closeUpgradeModal()" style="width:100%;margin-top:8px;">Nanti saja</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     WELCOME SCREEN
+══════════════════════════════════════════════ -->
+<div id="welcome" style="display:none;">
+  <div class="welcome-logo">Mindar<span class="dot">a</span></div>
+  <div class="welcome-tagline">Dari satu ide, ribuan kemungkinan.</div>
+
+  <div class="welcome-card">
+    <h2>Buat peta tentang apa hari ini?</h2>
+    <p>Ketik topik Anda — Mindara akan generate struktur peta secara otomatis.</p>
+
+    <div class="welcome-input-wrap">
+      <input type="text" id="welcome-input"
+        placeholder="contoh: strategi pemasaran digital..."
+        autocomplete="off" />
+      <button class="btn-generate" onclick="startGenerate()">
+        ✦ Buat Peta
+      </button>
+    </div>
+
+    <div class="example-label">Coba contoh topik</div>
+    <div class="example-chips">
+      <span class="example-chip" onclick="setExample('Skripsi S1')">Skripsi S1</span>
+      <span class="example-chip" onclick="setExample('Rencana Bisnis Startup')">Rencana Bisnis</span>
+      <span class="example-chip" onclick="setExample('Agentic AI')">Agentic AI</span>
+      <span class="example-chip" onclick="setExample('Manajemen Proyek')">Manajemen Proyek</span>
+      <span class="example-chip" onclick="setExample('Belajar Data Science')">Data Science</span>
+      <span class="example-chip" onclick="setExample('Strategi Karir')">Strategi Karir</span>
+    </div>
+
+    <div class="welcome-divider">atau</div>
+    <button class="btn-blank" onclick="startBlank()">Mulai dari canvas kosong</button>
+  </div>
+</div>
+
+<!-- Generating overlay -->
+<div id="gen-overlay">
+  <div class="gen-logo">Mindar<span class="dot">a</span></div>
+  <div class="gen-topic" id="gen-topic-label">Membuat peta...</div>
+  <div class="gen-progress"><div class="gen-bar"></div></div>
+  <div class="gen-status" id="gen-status">Menganalisis topik...</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TOOLBAR
+══════════════════════════════════════════════ -->
+<div id="toolbar" style="display:none;"></div>
+
+<!-- ── FLOATING PILL ── -->
+<div id="floating-bar">
+  <button class="fb-back" onclick="showDashboard()" title="Dashboard">←</button>
+  <div class="fb-logo">Mindar<span class="dot">a</span></div>
+  <div class="fb-sep"></div>
+  <span class="fb-name" id="toolbar-canvas-name">Canvas</span>
+  <div class="fb-sep"></div>
+  <button class="fb-btn" id="btn-undo" onclick="undo()" title="Undo (Ctrl+Z)" style="opacity:0.35;">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9H3"/></svg>
+  </button>
+  <button class="fb-btn" id="btn-redo" onclick="redo()" title="Redo (Ctrl+Y)" style="opacity:0.35;">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9h9"/></svg>
+  </button>
+  <div class="fb-sep"></div>
+  <button class="fb-btn" onclick="saveMap()" title="Simpan">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+  </button>
+  <button class="fb-btn" onclick="snapshot();layoutAll();render();toast('Peta dirapikan')" title="Rapikan layout">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>
+  </button>
+  <button class="fb-btn" onclick="exportMap()" title="Export JSON">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  </button>
+  <button class="fb-btn" onclick="importMap()" title="Import JSON">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  </button>
+  <span id="autosave-ind" style="font-size:10px;color:var(--text-faint);opacity:0;transition:opacity 0.5s;font-family:var(--font-head);padding:0 4px;">✓</span>
+  <div class="fb-sep"></div>
+  <button class="fb-btn" onclick="openApiModal()" title="Pengaturan AI" style="gap:5px;width:auto;padding:0 8px;">
+    AI <span class="api-badge demo" id="api-badge" style="font-size:9px;">Demo</span>
+  </button>
+  <button class="fb-ai" onclick="togglePanel()">✦ Asisten AI</button>
+</div>
+
+<!-- ── LEFT SIDEBAR ── -->
+<div id="left-sidebar">
+  <!-- Select -->
+  <button class="ls-btn active" id="ls-select" onclick="setEditorTool('select')" data-tip="Pilih">
+    <svg viewBox="0 0 24 24"><path d="M4 3l16 9-9 1.5L8 22z" stroke-width="1.8"/></svg>
+  </button>
+  <!-- Pan -->
+  <button class="ls-btn" id="ls-pan" onclick="setEditorTool('pan')" data-tip="Geser">
+    <svg viewBox="0 0 24 24"><path d="M14 5V3a1 1 0 00-2 0v2M14 5v6M14 5h-2M12 5V3a1 1 0 00-2 0v8M10 11V6a1 1 0 00-2 0v6l-1.5-1.5a1 1 0 00-1.4 1.4l2.4 2.4A5 5 0 009 18v1h6v-1a5 5 0 00-1-3V9a1 1 0 00-2 0v2"/></svg>
+  </button>
+
+  <div class="ls-sep"></div>
+
+  <!-- Add Node -->
+  <button class="ls-btn" onclick="addChild()" data-tip="Tambah Node">
+    <svg viewBox="0 0 24 24"><rect x="3" y="10" width="8" height="5" rx="1.5"/><rect x="13" y="4" width="8" height="5" rx="1.5"/><rect x="13" y="15" width="8" height="5" rx="1.5"/><path d="M7 12.5v-4M7 8.5c0-1.5 1-2.5 3-2.5h3M7 12.5c0 1.5 1 2.5 3 2.5h3"/></svg>
+  </button>
+  <!-- Delete -->
+  <button class="ls-btn" id="btn-del-side" onclick="deleteSelected()" data-tip="Hapus Node">
+    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4h6v2"/></svg>
+  </button>
+
+  <div class="ls-sep"></div>
+
+  <!-- Gallery (soon) -->
+  <button class="ls-btn disabled" data-tip="Galeri (Segera)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+  </button>
+  <!-- Present (soon) -->
+  <button class="ls-btn disabled" data-tip="Presentasi (Segera)">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  </button>
+  <!-- Note (soon) -->
+  <button class="ls-btn disabled" data-tip="Catatan (Segera)">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+  </button>
+
+  <div class="ls-sep"></div>
+
+  <!-- Background color (soon) -->
+  <button class="ls-btn disabled" data-tip="Warna Latar (Segera)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.3-.4-.6-.4-1 0-1.1.9-2 2-2h2.4A5.5 5.5 0 0022 12 10 10 0 0012 2z"/><circle cx="7" cy="10" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14" cy="7" r="1"/><circle cx="17" cy="10" r="1"/></svg>
+  </button>
+  <!-- Dots/Grid toggle -->
+  <button class="ls-btn active" onclick="toggleGrid()" id="ls-grid" data-tip="Grid">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="19" cy="5" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="19" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/><circle cx="19" cy="19" r="1" fill="currentColor"/></svg>
+  </button>
+
+  <div class="ls-sep"></div>
+
+  <!-- AI -->
+  <button class="ls-btn ls-ai" onclick="togglePanel()" data-tip="Asisten AI">
+    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/></svg>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<div id="main" style="display:none;">
+
+  <!-- Canvas -->
+  <div id="canvas-wrap">
+    <svg id="canvas">
+      <defs></defs>
+      <g id="vp">
+        <g id="edge-layer"></g>
+        <g id="node-layer"></g>
+      </g>
+    </svg>
+    <div id="empty-hint">
+      <div class="hint-text">Canvas kosong — klik ✦ Asisten AI untuk generate peta baru</div>
+    </div>
+    <div id="zoom-hud">
+      <span>↔</span>
+      <span class="zoom-val" id="zoom-val">100%</span>
+      <span style="color:var(--border)">│</span>
+      <span id="node-count">0 node</span>
+    </div>
+    <div id="shortcuts">
+      <kbd>Double-click</kbd> Edit &nbsp; <kbd>Tab</kbd> Cabang baru<br>
+      <kbd>Del</kbd> Hapus &nbsp; <kbd>Scroll</kbd> Zoom<br>
+      <kbd>Drag bg</kbd> Geser &nbsp; <kbd>Klik kanan</kbd> Menu
+    </div>
+  </div>
+
+  <!-- AI Panel -->
+  <div id="ai-panel" class="hidden">
+    <div class="panel-head">
+      <div class="ai-icon">✦</div>
+      <h3>Asisten AI</h3>
+      <button class="btn btn-ghost" style="padding:4px 7px;font-size:13px;" onclick="togglePanel()">✕</button>
+    </div>
+
+    <!-- Generate from panel -->
+    <div id="panel-generate">
+      <div class="panel-gen-label">Generate Peta Baru</div>
+      <div class="panel-gen-wrap">
+        <input type="text" id="panel-gen-input" placeholder="Topik baru..." />
+        <button class="btn btn-primary" style="padding:7px 12px;" onclick="panelGenerate()">✦</button>
+      </div>
+    </div>
+
+    <div id="sel-info">
+      <div class="sel-label">Node Terpilih</div>
+      <div id="sel-text" style="color:var(--text-faint);font-size:13px;font-style:italic;">— Klik node di peta —</div>
+    </div>
+
+    <div id="ai-body">
+      <div class="section-title">Saran Cabang</div>
+      <div id="chips">
+        <span style="color:var(--text-faint);font-size:12.5px;font-style:italic;">Pilih node untuk saran AI</span>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="section-title">Konteks &amp; Relasi</div>
+        <div id="ai-relate" class="ai-box" style="display:none;"></div>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="section-title">Respons AI</div>
+        <div id="ai-resp" class="ai-box" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div id="ai-input-wrap">
+      <textarea id="ai-q" rows="2" placeholder="Tanya AI tentang node ini..."></textarea>
+      <button class="btn btn-primary" onclick="askAI()" style="align-self:flex-end;padding:8px 11px;">↵</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx">
+  <div class="ctx-item" onclick="ctx_addChild()">＋ Tambah Cabang</div>
+  <div class="ctx-item" onclick="ctx_edit()">✎ Edit Teks</div>
+  <div class="ctx-item" onclick="ctx_color()">◉ Ganti Warna</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctx_expand()">✦ Kembangkan dengan AI</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" onclick="ctx_delete()">✕ Hapus Node</div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-box">
+    <h3 id="edit-title">Edit Node</h3>
+    <input type="text" class="modal-input" id="edit-inp" placeholder="Teks node..." />
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEdit()">Batal</button>
+      <button class="btn btn-primary" onclick="confirmEdit()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- API MODAL -->
+<div class="modal-overlay" id="api-modal">
+  <div class="modal-box">
+    <h3>Konfigurasi AI</h3>
+    <p>Masukkan API key untuk mengaktifkan AI sungguhan. Tanpa key, mode demo tetap berjalan.</p>
+    <label>Provider AI</label>
+    <select class="modal-select" id="prov-sel">
+      <option value="demo">Mode Demo (tanpa API key)</option>
+      <option value="openai">OpenAI — GPT-4o mini</option>
+      <option value="claude">Anthropic — Claude Haiku</option>
+    </select>
+    <label>API Key</label>
+    <input type="password" class="modal-input" id="key-inp" placeholder="sk-..." />
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeApiModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveApiKey()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- COLOR MODAL -->
+<div class="modal-overlay" id="color-modal">
+  <div class="modal-box" style="width:360px;">
+    <h3>Pilih Warna Node</h3>
+    <div id="color-grid" style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeColorModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="import-file" accept=".json" style="display:none;" onchange="handleImport(event)">
+
+<script>
+// ═══════════════════════════════════════════════
+//  COLOR SYSTEM
+// ═══════════════════════════════════════════════
+const LEVEL_COLORS = [
+  { a:'#003B35', b:'#004F46', t:'light' },
+  { a:'#FFA858', b:'#FFB870', t:'dark'  },
+  { a:'#1A6B5C', b:'#228A78', t:'light' },
+  { a:'#C97030', b:'#DD8040', t:'light' },
+  { a:'#004A42', b:'#006055', t:'light' },
+  { a:'#E8924A', b:'#F5A460', t:'dark'  },
+  { a:'#2A7A6A', b:'#38988A', t:'light' },
+  { a:'#B86030', b:'#CC7040', t:'light' },
+];
+
+const PALETTE = [
+  { a:'#003B35', b:'#004F46', t:'light', label:'Teal Gelap'    },
+  { a:'#FFA858', b:'#FFB870', t:'dark',  label:'Oranye'        },
+  { a:'#1A6B5C', b:'#228A78', t:'light', label:'Teal Sedang'   },
+  { a:'#C97030', b:'#DD8040', t:'light', label:'Coklat Oranye' },
+  { a:'#004A42', b:'#005A52', t:'light', label:'Teal Tua'      },
+  { a:'#E8924A', b:'#F5A460', t:'dark',  label:'Pasir Terang'  },
+  { a:'#2A7A6A', b:'#38988A', t:'light', label:'Teal Muda'     },
+  { a:'#B86030', b:'#CC7040', t:'light', label:'Coklat Tua'    },
+  { a:'#8B5A2B', b:'#A06A35', t:'light', label:'Coklat'        },
+  { a:'#5A8A80', b:'#6A9A90', t:'light', label:'Abu-teal'      },
+];
+
+const TEXT_LIGHT = '#FFFCF8';
+const TEXT_DARK  = '#003B35';
+
+// ═══════════════════════════════════════════════
+//  DEMO MAP STRUCTURES
+// ═══════════════════════════════════════════════
+const DEMO_MAPS = {
+  'Skripsi S1': {
+    root: 'Skripsi S1',
+    branches: [
+      { label: 'Pendahuluan',    children: ['Latar Belakang','Rumusan Masalah','Tujuan','Manfaat'] },
+      { label: 'Kajian Pustaka', children: ['Teori Utama','Penelitian Terdahulu','Kerangka Berpikir'] },
+      { label: 'Metodologi',     children: ['Jenis Penelitian','Populasi & Sampel','Teknik Analisis'] },
+      { label: 'Hasil & Bahasan',children: ['Temuan Data','Analisis','Diskusi','Implikasi'] },
+      { label: 'Penutup',        children: ['Kesimpulan','Saran','Keterbatasan'] },
+    ]
+  },
+  'Rencana Bisnis Startup': {
+    root: 'Rencana Bisnis',
+    branches: [
+      { label: 'Value Proposition', children: ['Problem Statement','Solusi','Unique Selling Point'] },
+      { label: 'Target Market',     children: ['Segmen Utama','Customer Persona','Market Size'] },
+      { label: 'Model Bisnis',      children: ['Revenue Stream','Struktur Biaya','Channel'] },
+      { label: 'Operasional',       children: ['Tim Inti','Tech Stack','Roadmap'] },
+      { label: 'Keuangan',          children: ['Proyeksi Revenue','Break Even','Funding Need'] },
+    ]
+  },
+  'Agentic AI': {
+    root: 'Agentic AI',
+    branches: [
+      { label: 'Arsitektur',   children: ['Planning Engine','Memory Module','Tool Executor','Orchestrator'] },
+      { label: 'Use Cases',    children: ['Otomasi Bisnis','Customer Service','Data Analysis','Code Assistant'] },
+      { label: 'Tools & RAG',  children: ['Vector DB','LLM API','Function Calling','Knowledge Base'] },
+      { label: 'Tantangan',    children: ['Hallucination','Keamanan','Biaya Operasi','Kontrol'] },
+      { label: 'Masa Depan',   children: ['Multi-Agent','AGI','Regulasi AI'] },
+    ]
+  },
+  'Manajemen Proyek': {
+    root: 'Manajemen Proyek',
+    branches: [
+      { label: 'Perencanaan',  children: ['Scope','Timeline','Resource Plan','Budget'] },
+      { label: 'Eksekusi',     children: ['Task Assignment','Daily Standup','Sprint','Deliverable'] },
+      { label: 'Monitoring',   children: ['KPI','Progress Report','Risk Register','Status Meeting'] },
+      { label: 'Tim',          children: ['Struktur Tim','Peran & Tanggung Jawab','Komunikasi'] },
+      { label: 'Penutupan',    children: ['Evaluasi','Lessons Learned','Dokumentasi'] },
+    ]
+  },
+  'Belajar Data Science': {
+    root: 'Data Science',
+    branches: [
+      { label: 'Fondasi',       children: ['Statistik','Matematika','Python/R','SQL'] },
+      { label: 'Data Wrangling',children: ['Pandas','Cleaning','EDA','Feature Engineering'] },
+      { label: 'Machine Learning',children:['Supervised','Unsupervised','Model Evaluation','Tuning'] },
+      { label: 'Deep Learning', children: ['Neural Network','CNN','RNN','Transformers'] },
+      { label: 'Portfolio',     children: ['Kaggle','GitHub','Blog','Project Nyata'] },
+    ]
+  },
+  'Strategi Karir': {
+    root: 'Strategi Karir',
+    branches: [
+      { label: 'Self Assessment', children: ['Skill Audit','Passion','Nilai Hidup','Kepribadian'] },
+      { label: 'Target Karir',    children: ['Role Impian','Industri','Timeline 5 Tahun'] },
+      { label: 'Skill Building',  children: ['Hard Skill','Soft Skill','Sertifikasi','Mentoring'] },
+      { label: 'Personal Brand',  children: ['LinkedIn','Portfolio','Networking','Konten'] },
+      { label: 'Eksekusi',        children: ['Lamaran','Interview','Negosiasi','Onboarding'] },
+    ]
+  },
+};
+
+const DEMO_BANK = {
+  default:           ['Pengertian','Manfaat','Tantangan','Implementasi','Contoh Kasus','Evaluasi','Referensi'],
+  'Agentic AI':      ['Arsitektur Agent','Memory Module','Planning Engine','Tool Use','Multi-Agent','RAG','Evaluasi'],
+  'Data':            ['Sumber Data','Kualitas Data','Pipeline ETL','Analisis','Visualisasi','Keamanan Data'],
+  'Bisnis':          ['Model Revenue','Segmen Pasar','Kompetitor','Value Proposition','KPI','Roadmap'],
+  'Strategi':        ['Visi & Misi','SWOT Analysis','OKR','Timeline','Sumber Daya','Risiko'],
+  'Teknologi':       ['Frontend','Backend','Database','API','Keamanan','Skalabilitas'],
+  'Produk':          ['User Research','Fitur Utama','MVP','Desain UI/UX','Testing','Launch'],
+};
+
+// ── CONTEXT BANK: key = "root_node" atau "parent_node" (lowercase) ──────────
+const CONTEXT_BANK = {
+  // Agentic AI → cabang utama
+  'agentic ai_arsitektur':    ['Planning Engine','Memory Layer','Tool Executor','Feedback Loop','Orchestrator','State Manager'],
+  'agentic ai_use cases':     ['Customer Service Bot','Code Assistant','Research Agent','Data Pipeline','Workflow Otomatis','Content Generator'],
+  'agentic ai_tools & rag':   ['Vector Database','Embedding Model','Chunking Strategy','Retrieval Logic','Reranking','Hybrid Search'],
+  'agentic ai_tantangan':     ['Prompt Injection','Biaya Token','Latency Tinggi','Output Tidak Stabil','Kontrol Agent','Auditabilitas'],
+  'agentic ai_masa depan':    ['Autonomous Agent','Self-improving AI','Agent Marketplace','Regulasi Global','Human-AI Teaming'],
+  // Agentic AI → level 2
+  'arsitektur_planning':      ['Task Decomposition','Goal Hierarchy','Action Selection','Constraint Handling','Replanning'],
+  'arsitektur_memory':        ['Working Memory','Episodic Store','Semantic Cache','Memory Pruning','Context Window'],
+  'arsitektur_memory module': ['Short-term Memory','Long-term Memory','Memory Retrieval','Memory Update','Forgetting Curve'],
+  'arsitektur_planning engine':['Task Decomposition','Goal Setting','Action Space','Sub-goal Chain','Priority Queue'],
+  'arsitektur_tool executor': ['Function Calling','API Gateway','Sandboxing','Error Handling','Tool Registry'],
+  'arsitektur_orchestrator':  ['Agent Supervisor','Task Router','Load Balancer','Workflow Engine','Event Bus'],
+  'tools & rag_vector database':['Pinecone','Weaviate','ChromaDB','FAISS','pgvector','Index Strategy'],
+  'tools & rag_embedding model':['OpenAI Ada','Sentence-BERT','Cohere Embed','BGE Model','Fine-tuning'],
+
+  // Skripsi → cabang utama
+  'skripsi_pendahuluan':      ['Latar Belakang','Rumusan Masalah','Tujuan Penelitian','Manfaat','Batasan Masalah','Definisi Istilah'],
+  'skripsi_kajian pustaka':   ['Teori Utama','Penelitian Terdahulu','Kerangka Berpikir','Hipotesis','Gap Research'],
+  'skripsi_metodologi':       ['Jenis Penelitian','Populasi & Sampel','Instrumen','Teknik Pengumpulan','Analisis Data','Validitas & Reliabilitas'],
+  'skripsi_hasil & bahasan':  ['Deskripsi Data','Hasil Uji','Interpretasi','Perbandingan Teori','Implikasi'],
+  'skripsi_penutup':          ['Kesimpulan','Saran Praktis','Saran Penelitian Lanjut','Keterbatasan','Kontribusi'],
+  // Skripsi → level 2
+  'pendahuluan_latar belakang':['Konteks Global','Konteks Indonesia','Kondisi Saat Ini','Problem Statement','Urgensitas'],
+  'metodologi_analisis data': ['Uji Normalitas','Uji Hipotesis','Regresi Linear','ANOVA','Thematic Analysis'],
+
+  // Rencana Bisnis → cabang utama
+  'rencana bisnis_value proposition':['Problem Statement','Solusi Ditawarkan','Unique Selling Point','Customer Benefit','Pain & Gain'],
+  'rencana bisnis_target market':    ['Segmen Primer','Customer Persona','Market Size (TAM/SAM/SOM)','Demografi','Psikografi'],
+  'rencana bisnis_model bisnis':     ['Revenue Stream','Struktur Biaya','Gross Margin','Unit Economics','Monetisasi'],
+  'rencana bisnis_operasional':      ['Tim Inti','Tech Stack','Vendor','SOP','Quality Control'],
+  'rencana bisnis_keuangan':         ['Proyeksi Revenue','Break Even Point','Cash Flow','Funding Need','ROI'],
+
+  // Manajemen Proyek → cabang utama
+  'manajemen proyek_perencanaan':    ['Project Charter','WBS','Gantt Chart','Resource Plan','Risk Register'],
+  'manajemen proyek_eksekusi':       ['Sprint Planning','Daily Standup','Task Assignment','Deliverable','Code Review'],
+  'manajemen proyek_monitoring':     ['KPI Dashboard','Earned Value','Variance Analysis','Status Report','Change Request'],
+  'manajemen proyek_tim':            ['RACI Matrix','Kompetensi','Komunikasi','Resolusi Konflik','Onboarding'],
+
+  // Data Science → cabang utama
+  'data science_fondasi':            ['Statistik Deskriptif','Probabilitas','Aljabar Linear','Python Dasar','SQL Dasar'],
+  'data science_machine learning':   ['Supervised Learning','Unsupervised Learning','Reinforcement Learning','Model Evaluation','Hyperparameter Tuning'],
+  'data science_deep learning':      ['Arsitektur ANN','Backpropagation','CNN','RNN/LSTM','Transformer','Transfer Learning'],
+  'data science_portfolio':          ['Kaggle Competition','GitHub Projects','Streamlit App','Blog Artikel','Sertifikasi'],
+
+  // Strategi Karir → cabang utama
+  'strategi karir_self assessment':  ['Inventori Skill','Strengths Finder','Values Clarification','MBTI/DISC','Feedback 360'],
+  'strategi karir_skill building':   ['Hard Skill Roadmap','Soft Skill','Online Course','Mentorship','Practice Project'],
+  'strategi karir_personal brand':   ['LinkedIn Optimization','Portfolio Website','Thought Leadership','Networking Event','Content Creator'],
+};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let nodes   = {};
+let sel     = null;
+let ctxId   = null;
+let vx=0, vy=0, vs=1;
+let panning=false, px0=0, py0=0, pvx0=0, pvy0=0;
+let dragId=null, dox=0, doy=0, didDrag=false, dragSnapped=false;
+let apiKey  = localStorage.getItem('mi_key')  || '';
+let aiProv  = localStorage.getItem('mi_prov') || 'demo';
+let history = [], future = [];
+let autoSaveTimer = null;
+
+// ═══════════════════════════════════════════════
+//  WELCOME SCREEN
+// ═══════════════════════════════════════════════
+document.getElementById('welcome-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startGenerate();
+});
+
+document.getElementById('panel-gen-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') panelGenerate();
+});
+
+function setExample(topic) {
+  document.getElementById('welcome-input').value = topic;
+  document.getElementById('welcome-input').focus();
+}
+
+async function startGenerate() {
+  const topic = document.getElementById('welcome-input').value.trim();
+  if (!topic) { document.getElementById('welcome-input').focus(); return; }
+  hideWelcome();
+  await generateMap(topic);
+}
+
+function startBlank() {
+  hideWelcome();
+  nodes = {};
+  render();
+  checkEmpty();
+}
+
+function hideWelcome() {
+  const w = document.getElementById('welcome');
+  w.classList.add('hiding');
+  setTimeout(() => { w.style.display='none'; }, 400);
+  document.getElementById('ai-panel').classList.remove('hidden');
+}
+
+function backToWelcome() { showDashboard(); }
+
+// ═══════════════════════════════════════════════
+//  CANVAS MANAGEMENT (DASHBOARD)
+// ═══════════════════════════════════════════════
+const FREE_LIMIT = 3;
+let currentCanvasId = null;
+
+function getCanvases() {
+  return JSON.parse(localStorage.getItem('mi_canvases') || '[]');
+}
+function saveCanvasesMeta(list) {
+  localStorage.setItem('mi_canvases', JSON.stringify(list));
+}
+
+function showDashboard() {
+  if (currentCanvasId) _saveToSlot(false);
+  currentCanvasId = null;
+  history = []; future = []; updateUndoRedo();
+  document.getElementById('main').style.display       = 'none';
+  document.getElementById('welcome').style.display    = 'none';
+  document.getElementById('floating-bar').className   = '';
+  document.getElementById('left-sidebar').className   = '';
+  document.getElementById('ai-panel').classList.add('hidden');
+  nodes = {}; sel = null; render();
+  // Tampilkan dashboard
+  renderDashboard();
+  document.getElementById('dashboard').style.display = 'flex';
+}
+
+function renderDashboard() {
+  const canvases = getCanvases();
+  const counter  = document.getElementById('dash-counter');
+  const grid     = document.getElementById('dash-grid');
+  const banner   = document.getElementById('dash-banner');
+  const atLimit  = canvases.length >= FREE_LIMIT;
+
+  counter.textContent = `${canvases.length}/${FREE_LIMIT} Maps`;
+  counter.className   = 'dash-map-badge' + (atLimit ? ' full' : '');
+  banner.className    = 'dash-banner' + (atLimit ? ' show' : '');
+  grid.innerHTML      = '';
+
+  // Kartu canvas yang ada (terbaru dulu)
+  [...canvases].reverse().forEach(cv => {
+    const card = document.createElement('div');
+    card.className = 'canvas-card canvas-existing';
+    card.innerHTML = `
+      <div class="card-icon-area">
+        <svg width="40" height="48" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="38" height="46" rx="4" stroke="currentColor" stroke-width="2.5"/>
+          <line x1="8" y1="14" x2="32" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="8" y1="22" x2="32" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="8" y1="30" x2="22" y2="30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-info">
+        <div class="card-name">${cv.name}</div>
+        <div class="card-meta">${formatDate(new Date(cv.updatedAt))}</div>
+      </div>
+      <div class="card-actions">
+        <button class="card-btn" onclick="event.stopPropagation();openCanvas('${cv.id}')">Buka</button>
+        <button class="card-btn card-btn-danger" onclick="event.stopPropagation();deleteCanvas('${cv.id}')">Hapus</button>
+      </div>`;
+    card.addEventListener('click', () => openCanvas(cv.id));
+    grid.appendChild(card);
+  });
+
+  // Kartu buat baru / upgrade (di akhir grid atau awal jika kosong)
+  const actionCard = document.createElement('div');
+  if (!atLimit) {
+    actionCard.className = 'canvas-card canvas-new';
+    actionCard.onclick = () => openNameModal();
+    actionCard.innerHTML = `<div class="card-new-icon">＋</div><div class="card-new-label">Canvas Baru</div>`;
+    grid.insertBefore(actionCard, grid.firstChild);
+  } else {
+    actionCard.className = 'canvas-card canvas-upgrade';
+    actionCard.onclick = () => showUpgradeModal();
+    actionCard.innerHTML = `<div class="card-new-icon">✦</div><div class="card-new-label">Upgrade ke Pro</div><div class="card-limit-note">Batas 3 canvas gratis tercapai</div>`;
+    grid.insertBefore(actionCard, grid.firstChild);
+  }
+}
+
+function openNameModal() {
+  const modal = document.getElementById('name-modal');
+  const inp   = document.getElementById('name-input');
+  inp.value   = '';
+  modal.style.display = 'flex';
+  setTimeout(() => inp.focus(), 80);
+  inp.onkeydown = e => {
+    if (e.key === 'Enter')  confirmCreateCanvas();
+    if (e.key === 'Escape') closeNameModal();
+  };
+}
+function closeNameModal()   { document.getElementById('name-modal').style.display   = 'none'; }
+function showUpgradeModal() { document.getElementById('upgrade-modal').style.display = 'flex'; }
+function closeUpgradeModal(){ document.getElementById('upgrade-modal').style.display = 'none'; }
+
+function confirmCreateCanvas() {
+  const name = document.getElementById('name-input').value.trim() || 'Canvas Baru';
+  closeNameModal();
+  const id = 'cv_' + Date.now();
+  const list = getCanvases();
+  list.push({ id, name, createdAt: Date.now(), updatedAt: Date.now(), nodeCount: 0 });
+  saveCanvasesMeta(list);
+  currentCanvasId = id;
+  nodes = {}; sel = null;
+  _enterEditor(name, false); // langsung ke editor, skip welcome
+  render(); checkEmpty();
+}
+
+function openCanvas(id) {
+  const cv = getCanvases().find(c => c.id === id);
+  if (!cv) return;
+  currentCanvasId = id;
+  history = []; future = []; updateUndoRedo();
+  const raw = localStorage.getItem('mi_canvas_' + id);
+  nodes = raw ? (JSON.parse(raw).nodes || {}) : {};
+  sel = null;
+  const hasNodes = Object.keys(nodes).length > 0;
+  _enterEditor(cv.name, !hasNodes);
+  if (hasNodes) { render(); checkEmpty(); resetView(); }
+}
+
+function deleteCanvas(id) {
+  if (!confirm('Hapus canvas ini? Data tidak bisa dikembalikan.')) return;
+  saveCanvasesMeta(getCanvases().filter(c => c.id !== id));
+  localStorage.removeItem('mi_canvas_' + id);
+  renderDashboard();
+}
+
+function _enterEditor(name, showWelcome) {
+  document.getElementById('dashboard').style.display  = 'none';
+  document.getElementById('main').style.display       = 'flex';
+  document.getElementById('floating-bar').className   = 'show';
+  document.getElementById('left-sidebar').className   = 'show';
+  document.getElementById('toolbar-canvas-name').textContent = name;
+  if (showWelcome) {
+    document.getElementById('welcome').style.display = 'flex';
+    document.getElementById('welcome').classList.remove('hiding');
+    document.getElementById('welcome-input').value = '';
+    document.getElementById('ai-panel').classList.add('hidden');
+  } else {
+    document.getElementById('welcome').style.display = 'none';
+    document.getElementById('ai-panel').classList.remove('hidden');
+  }
+}
+
+function toggleGrid() {
+  const wrap = document.getElementById('canvas-wrap');
+  const btn  = document.getElementById('ls-grid');
+  const on   = wrap.dataset.grid !== 'off';
+  wrap.dataset.grid = on ? 'off' : 'on';
+  wrap.style.backgroundImage = on ? 'none' : '';
+  btn.classList.toggle('active', !on);
+}
+
+function setEditorTool(tool) {
+  // Visual active state
+  document.querySelectorAll('.ls-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('ls-' + tool);
+  if (btn) btn.classList.add('active');
+  // Pan mode: change canvas cursor
+  const cw = document.getElementById('canvas-wrap');
+  if (tool === 'pan') {
+    cw.style.cursor = 'grab';
+    cw.dataset.tool = 'pan';
+  } else {
+    cw.style.cursor = 'default';
+    cw.dataset.tool = 'select';
+  }
+}
+
+function _saveToSlot(showToast = true) {
+  if (!currentCanvasId) return;
+  localStorage.setItem('mi_canvas_' + currentCanvasId, JSON.stringify({ nodes }));
+  const list = getCanvases();
+  const cv   = list.find(c => c.id === currentCanvasId);
+  if (cv) { cv.updatedAt = Date.now(); cv.nodeCount = Object.keys(nodes).length; saveCanvasesMeta(list); }
+  if (showToast) toast('Canvas disimpan');
+}
+
+function formatDate(d) {
+  const diff = Date.now() - d;
+  if (diff < 60000)    return 'Baru saja';
+  if (diff < 3600000)  return Math.floor(diff/60000) + ' menit lalu';
+  if (diff < 86400000) return Math.floor(diff/3600000) + ' jam lalu';
+  if (diff < 604800000)return Math.floor(diff/86400000) + ' hari lalu';
+  return d.toLocaleDateString('id-ID');
+}
+
+async function panelGenerate() {
+  const topic = document.getElementById('panel-gen-input').value.trim();
+  if (!topic) return;
+  document.getElementById('panel-gen-input').value = '';
+  await generateMap(topic);
+}
+
+// ═══════════════════════════════════════════════
+//  AI GENERATE FROM PROMPT
+// ═══════════════════════════════════════════════
+async function generateMap(topic) {
+  // Show generating overlay
+  const overlay = document.getElementById('gen-overlay');
+  document.getElementById('gen-topic-label').textContent = `"${topic}"`;
+  overlay.classList.add('show');
+
+  const statuses = [
+    'Menganalisis topik...',
+    'Merancang struktur peta...',
+    'Menyusun cabang utama...',
+    'Menambahkan detail...',
+    'Selesai!'
+  ];
+  let si = 0;
+  const statusEl = document.getElementById('gen-status');
+  const statusInterval = setInterval(() => {
+    if (si < statuses.length - 1) {
+      statusEl.textContent = statuses[++si];
+    }
+  }, 400);
+
+  try {
+    let mapData;
+
+    if (apiKey && aiProv !== 'demo') {
+      mapData = await generateFromAI(topic);
+    } else {
+      await sleep(2000);
+      mapData = getDemoMap(topic);
+    }
+
+    clearInterval(statusInterval);
+    statusEl.textContent = 'Selesai!';
+    await sleep(300);
+
+    overlay.classList.remove('show');
+    buildMapFromData(mapData);
+
+  } catch(e) {
+    clearInterval(statusInterval);
+    overlay.classList.remove('show');
+    toast('Gagal generate. Menggunakan mode demo.');
+    await sleep(200);
+    buildMapFromData(getDemoMap(topic));
+  }
+}
+
+function getDemoMap(topic) {
+  // Find closest match
+  for (const key of Object.keys(DEMO_MAPS)) {
+    if (topic.toLowerCase().includes(key.toLowerCase()) ||
+        key.toLowerCase().includes(topic.toLowerCase().split(' ')[0])) {
+      return DEMO_MAPS[key];
+    }
+  }
+  // Generic fallback
+  return {
+    root: topic,
+    branches: [
+      { label: 'Pengertian',    children: ['Definisi','Sejarah','Ruang Lingkup'] },
+      { label: 'Komponen Utama',children: ['Elemen 1','Elemen 2','Elemen 3'] },
+      { label: 'Manfaat',       children: ['Bagi Individu','Bagi Organisasi','Bagi Masyarakat'] },
+      { label: 'Tantangan',     children: ['Internal','Eksternal','Solusi'] },
+      { label: 'Implementasi',  children: ['Perencanaan','Eksekusi','Evaluasi'] },
+    ]
+  };
+}
+
+async function generateFromAI(topic) {
+  const prompt = `Buat struktur mind map untuk topik "${topic}" dalam bahasa Indonesia.
+Jawab HANYA dengan JSON valid tanpa markdown, format:
+{"root":"${topic}","branches":[{"label":"Cabang Utama","children":["anak1","anak2","anak3"]}]}
+Buat 4-5 cabang utama, setiap cabang 3-4 anak. Singkat dan padat.`;
+
+  const result = await callAI(prompt);
+
+  // Extract JSON from response
+  const jsonMatch = result.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Invalid JSON response');
+  return JSON.parse(jsonMatch[0]);
+}
+
+function buildMapFromData(data) {
+  snapshot();
+  nodes = {};
+  const wrap = document.getElementById('canvas-wrap');
+  const W = wrap.clientWidth || 900;
+  const H = wrap.clientHeight || 600;
+  const cx = W / 2, cy = H / 2;
+
+  const rootId = createNode(null, data.root, cx, cy);
+
+  data.branches.forEach(branch => {
+    const branchId = createNode(rootId, branch.label, 0, 0);
+    branch.children?.forEach(child => createNode(branchId, child, 0, 0));
+  });
+
+  layoutAll(cx, cy);
+
+  vx = 0; vy = 0; vs = 0.85;
+  updateVP(); render(); checkEmpty();
+  toast(`✦ Peta "${data.root}" berhasil dibuat`);
+}
+
+// ═══════════════════════════════════════════════
+//  HORIZONTAL TREE LAYOUT
+// ═══════════════════════════════════════════════
+const X_GAP = 210;  // jarak horizontal antar level
+const Y_GAP = 22;   // jarak vertikal antar sibling
+
+function childrenOf(pid) {
+  return Object.values(nodes).filter(n => n.parentId === pid);
+}
+
+function nodeH(id) {
+  // estimasi tinggi node + padding vertikal
+  const n = nodes[id];
+  if (!n) return 40;
+  const lines = Math.ceil(n.text.length / 16);
+  const base = n.level === 0 ? 44 : n.level === 1 ? 38 : 34;
+  return base * lines;
+}
+
+function subtreeH(id) {
+  const ch = childrenOf(id);
+  if (!ch.length) return nodeH(id);
+  const total = ch.reduce((s, c) => s + subtreeH(c.id), 0) + (ch.length - 1) * Y_GAP;
+  return Math.max(nodeH(id), total);
+}
+
+function placeChildren(parent, children, dir) {
+  if (!children.length) return;
+  const total = children.reduce((s, c) => s + subtreeH(c.id), 0) + (children.length - 1) * Y_GAP;
+  let y = parent.y - total / 2;
+  children.forEach(c => {
+    const h = subtreeH(c.id);
+    c.x = parent.x + dir * X_GAP;
+    c.y = y + h / 2;
+    placeChildren(c, childrenOf(c.id), dir);
+    y += h + Y_GAP;
+  });
+}
+
+function layoutAll(cx, cy) {
+  const root = Object.values(nodes).find(n => !n.parentId);
+  if (!root) return;
+  if (cx !== undefined) { root.x = cx; root.y = cy; }
+
+  const allCh = childrenOf(root.id);
+  if (!allCh.length) return;
+
+  // Bagi rata: separuh kiri, separuh kanan
+  const half  = Math.ceil(allCh.length / 2);
+  const rightCh = allCh.slice(0, half);
+  const leftCh  = allCh.slice(half);
+
+  placeChildren(root, rightCh,  1);
+  placeChildren(root, leftCh,  -1);
+}
+
+// ═══════════════════════════════════════════════
+//  NODE HELPERS
+// ═══════════════════════════════════════════════
+function makeId() {
+  return 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function nodeSize(text, level) {
+  const fs = level === 0 ? 14.5 : 12.5;
+  const w  = Math.max(level===0?148:108, text.length*(level===0?9:8)+44);
+  const h  = level === 0 ? 52 : 40;
+  return { w, h, fs };
+}
+
+function createNode(parentId, text, x, y) {
+  const id  = makeId();
+  const par = parentId ? nodes[parentId] : null;
+  const lv  = par ? par.level + 1 : 0;
+  const ci  = lv % LEVEL_COLORS.length;
+  nodes[id] = { id, text, x:x??0, y:y??0, parentId, level:lv,
+    ca: LEVEL_COLORS[ci].a, cb: LEVEL_COLORS[ci].b, tc: LEVEL_COLORS[ci].t };
+  return id;
+}
+
+function checkEmpty() {
+  const hint = document.getElementById('empty-hint');
+  hint.style.display = Object.keys(nodes).length === 0 ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════════
+//  AUTO LAYOUT
+// ═══════════════════════════════════════════════
+function autoPlace(id) {
+  // Setelah tambah node manual, re-layout seluruh tree
+  layoutAll();
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+function render() {
+  renderEdges();
+  renderNodes();
+  document.getElementById('node-count').textContent = Object.keys(nodes).length+' node';
+}
+
+function renderEdges() {
+  const layer=document.getElementById('edge-layer');
+  layer.innerHTML='';
+  Object.values(nodes).forEach(n=>{
+    if(!n.parentId) return;
+    const p=nodes[n.parentId]; if(!p) return;
+    const el=svgEl('path');
+    el.setAttribute('d', bezier(p.x,p.y,n.x,n.y));
+    el.setAttribute('class','edge');
+    el.setAttribute('stroke',n.ca);
+    el.setAttribute('opacity','0.45');
+    layer.appendChild(el);
+  });
+}
+
+function bezier(x1,y1,x2,y2){
+  const mx=(x1+x2)/2;
+  return `M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`;
+}
+
+function renderNodes() {
+  const layer=document.getElementById('node-layer');
+  layer.innerHTML='';
+  Object.values(nodes).forEach(n=>renderNode(n,layer));
+}
+
+function renderNode(n, layer) {
+  const {w,h,fs}=nodeSize(n.text,n.level);
+  const isSel=n.id===sel, isRoot=n.level===0;
+  const tc=n.tc==='dark'?TEXT_DARK:TEXT_LIGHT;
+
+  const g=svgEl('g');
+  g.setAttribute('class','node-group'+(isSel?' node-selected':''));
+  g.setAttribute('data-id',n.id);
+  g.setAttribute('transform',`translate(${n.x-w/2},${n.y-h/2})`);
+
+  // Gradient
+  const gid='g_'+n.id;
+  const old=document.getElementById(gid); if(old) old.remove();
+  const grad=svgEl('linearGradient');
+  grad.id=gid;
+  grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
+  grad.setAttribute('x2','100%'); grad.setAttribute('y2','100%');
+  const s1=svgEl('stop'); s1.setAttribute('offset','0%');   s1.setAttribute('stop-color',n.ca);
+  const s2=svgEl('stop'); s2.setAttribute('offset','100%'); s2.setAttribute('stop-color',n.cb);
+  grad.appendChild(s1); grad.appendChild(s2);
+  document.querySelector('#canvas defs').appendChild(grad);
+
+  // Body
+  const body=svgEl('rect');
+  body.setAttribute('class','node-body');
+  body.setAttribute('width',w); body.setAttribute('height',h);
+  body.setAttribute('rx',isRoot?'10':'7');
+  body.setAttribute('fill',`url(#${gid})`);
+  g.appendChild(body);
+
+  // Selection ring
+  if(isSel){
+    const sr=svgEl('rect');
+    sr.setAttribute('x','-2'); sr.setAttribute('y','-2');
+    sr.setAttribute('width',w+4); sr.setAttribute('height',h+4);
+    sr.setAttribute('rx',isRoot?'11':'8');
+    sr.setAttribute('fill','none');
+    sr.setAttribute('stroke','#FFA858');
+    sr.setAttribute('stroke-width','2.5');
+    sr.setAttribute('pointer-events','none');
+    g.appendChild(sr);
+  }
+
+  // Root inner detail
+  if(isRoot){
+    const ir=svgEl('rect');
+    ir.setAttribute('x','5'); ir.setAttribute('y','5');
+    ir.setAttribute('width',w-10); ir.setAttribute('height',h-10);
+    ir.setAttribute('rx','6'); ir.setAttribute('fill','none');
+    ir.setAttribute('stroke','rgba(255,252,248,0.2)');
+    ir.setAttribute('stroke-width','1');
+    g.appendChild(ir);
+  }
+
+  // Text
+  const txt=svgEl('text');
+  txt.setAttribute('class','node-text');
+  txt.setAttribute('x',w/2); txt.setAttribute('y',h/2);
+  txt.setAttribute('font-size',fs);
+  txt.setAttribute('font-weight',isRoot?'700':'500');
+  txt.setAttribute('fill',tc);
+  txt.setAttribute('letter-spacing',isRoot?'-0.3':'0');
+  txt.textContent=n.text;
+  g.appendChild(txt);
+
+  // Quick-add (+)
+  const addG=svgEl('g');
+  addG.setAttribute('class','add-btn');
+  addG.setAttribute('transform',`translate(${w-11},${h/2-9})`);
+  const addC=svgEl('circle');
+  addC.setAttribute('cx','9'); addC.setAttribute('cy','9'); addC.setAttribute('r','9');
+  addC.setAttribute('fill','rgba(255,252,248,0.22)');
+  const addT=svgEl('text');
+  addT.setAttribute('x','9'); addT.setAttribute('y','9');
+  addT.setAttribute('font-size','13'); addT.setAttribute('fill',tc);
+  addT.setAttribute('dominant-baseline','middle'); addT.setAttribute('text-anchor','middle');
+  addT.setAttribute('pointer-events','none'); addT.setAttribute('font-weight','600');
+  addT.textContent='+';
+  addG.appendChild(addC); addG.appendChild(addT);
+  addG.addEventListener('click',e=>{e.stopPropagation(); openEdit(null,n.id);});
+  g.appendChild(addG);
+
+  // Events
+  g.addEventListener('mousedown', e=>onNodeDown(e,n.id));
+  g.addEventListener('click',     e=>{e.stopPropagation(); if(!didDrag) selectNode(n.id);});
+  g.addEventListener('dblclick',  e=>{e.stopPropagation(); openEdit(n.id);});
+  g.addEventListener('contextmenu',e=>{e.preventDefault(); e.stopPropagation(); showCtx(e,n.id);});
+
+  layer.appendChild(g);
+}
+
+function svgEl(tag){
+  return document.createElementNS('http://www.w3.org/2000/svg',tag);
+}
+
+// ═══════════════════════════════════════════════
+//  SELECTION
+// ═══════════════════════════════════════════════
+function setDelBtn(disabled) {
+  // support both old hidden btn-del and new sidebar btn-del-side
+  const b1 = document.getElementById('btn-del');
+  const b2 = document.getElementById('btn-del-side');
+  if (b1) b1.disabled = disabled;
+  if (b2) {
+    b2.style.opacity  = disabled ? '0.35' : '1';
+    b2.style.cursor   = disabled ? 'not-allowed' : 'pointer';
+    b2.disabled       = disabled;
+  }
+}
+
+function selectNode(id){
+  sel=id;
+  const n=nodes[id];
+  setDelBtn(!id || n?.level===0);
+  document.getElementById('sel-text').textContent=n?n.text:'— Klik node di peta —';
+  document.getElementById('sel-text').style.cssText=n
+    ?'font-size:13.5px;font-weight:600;color:var(--text);font-style:normal;'
+    :'font-size:13px;color:var(--text-faint);font-style:italic;';
+  if(n) generateSuggestions(n); // node.id tersedia di dalam n
+  render();
+}
+
+function deselect(){
+  sel=null;
+  setDelBtn(true);
+  document.getElementById('sel-text').textContent='— Klik node di peta —';
+  document.getElementById('sel-text').style.cssText='font-size:13px;color:var(--text-faint);font-style:italic;';
+  document.getElementById('chips').innerHTML='<span style="color:var(--text-faint);font-size:12.5px;font-style:italic;">Pilih node untuk saran AI</span>';
+  render();
+}
+
+// ═══════════════════════════════════════════════
+//  NODE OPERATIONS
+// ═══════════════════════════════════════════════
+function addChild(){
+  const pid=sel||Object.keys(nodes)[0];
+  if(!pid) return;
+  openEdit(null,pid);
+}
+
+function deleteSelected(){
+  if(!sel||nodes[sel]?.level===0) return;
+  snapshot();
+  deleteRecursive(sel);
+  sel=null;
+  setDelBtn(true);
+  render(); checkEmpty(); scheduleAutoSave();
+}
+
+function deleteRecursive(id){
+  Object.keys(nodes).filter(x=>nodes[x].parentId===id).forEach(deleteRecursive);
+  delete nodes[id];
+}
+
+// ═══════════════════════════════════════════════
+//  DRAG
+// ═══════════════════════════════════════════════
+function getAllDescendants(id) {
+  const result = [];
+  const queue = [id];
+  while (queue.length) {
+    childrenOf(queue.shift()).forEach(c => { result.push(c.id); queue.push(c.id); });
+  }
+  return result;
+}
+
+function onNodeDown(e,id){
+  if(e.button!==0) return;
+  e.stopPropagation();
+  didDrag=false; dragSnapped=false; dragId=id;
+  const pt=s2c(e.clientX,e.clientY);
+  dox=nodes[id].x-pt.x; doy=nodes[id].y-pt.y;
+  window.addEventListener('mousemove',onDragMove);
+  window.addEventListener('mouseup',onDragUp);
+}
+function onDragMove(e){
+  if(!dragId) return;
+  if(!dragSnapped){ snapshot(); dragSnapped=true; }
+  didDrag=true;
+  const pt=s2c(e.clientX,e.clientY);
+  const newX=pt.x+dox, newY=pt.y+doy;
+  const dx=newX-nodes[dragId].x, dy=newY-nodes[dragId].y;
+  nodes[dragId].x=newX; nodes[dragId].y=newY;
+  getAllDescendants(dragId).forEach(cid=>{ nodes[cid].x+=dx; nodes[cid].y+=dy; });
+  render();
+}
+function onDragUp(){
+  window.removeEventListener('mousemove',onDragMove);
+  window.removeEventListener('mouseup',onDragUp);
+  if(didDrag) scheduleAutoSave();
+  dragId=null;
+  setTimeout(()=>{didDrag=false;},50);
+}
+
+// ═══════════════════════════════════════════════
+//  PAN & ZOOM
+// ═══════════════════════════════════════════════
+function s2c(sx,sy){
+  const r=document.getElementById('canvas-wrap').getBoundingClientRect();
+  return{x:(sx-r.left-vx)/vs, y:(sy-r.top-vy)/vs};
+}
+function updateVP(){
+  document.getElementById('vp').setAttribute('transform',`translate(${vx},${vy}) scale(${vs})`);
+  document.getElementById('zoom-val').textContent=Math.round(vs*100)+'%';
+}
+function zoomBy(f,cx,cy){
+  const wrap=document.getElementById('canvas-wrap');
+  cx=cx??wrap.clientWidth/2; cy=cy??wrap.clientHeight/2;
+  const ns=Math.min(3,Math.max(0.15,vs*f));
+  vx=cx-(cx-vx)*ns/vs; vy=cy-(cy-vy)*ns/vs; vs=ns;
+  updateVP();
+}
+function resetView(){vx=0;vy=0;vs=1;updateVP();}
+
+const wrap=document.getElementById('canvas-wrap');
+wrap.addEventListener('mousedown',e=>{
+  if(e.target.closest('.node-group')) return;
+  panning=true; px0=e.clientX; py0=e.clientY; pvx0=vx; pvy0=vy;
+  wrap.classList.add('panning');
+  deselect(); hideCtx();
+});
+window.addEventListener('mousemove',e=>{
+  if(!panning) return;
+  vx=pvx0+e.clientX-px0; vy=pvy0+e.clientY-py0; updateVP();
+});
+window.addEventListener('mouseup',()=>{panning=false;wrap.classList.remove('panning');});
+wrap.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=wrap.getBoundingClientRect();
+  zoomBy(e.deltaY<0?1.1:0.9,e.clientX-r.left,e.clientY-r.top);
+},{passive:false});
+
+// ═══════════════════════════════════════════════
+//  CONTEXT MENU
+// ═══════════════════════════════════════════════
+function showCtx(e,id){
+  ctxId=id; selectNode(id);
+  const m=document.getElementById('ctx');
+  m.style.display='block'; m.style.left=e.clientX+'px'; m.style.top=e.clientY+'px';
+  const r=m.getBoundingClientRect();
+  if(r.right>innerWidth)  m.style.left=(e.clientX-r.width)+'px';
+  if(r.bottom>innerHeight)m.style.top=(e.clientY-r.height)+'px';
+}
+function hideCtx(){document.getElementById('ctx').style.display='none';}
+document.addEventListener('click',hideCtx);
+function ctx_addChild(){hideCtx();openEdit(null,ctxId);}
+function ctx_edit(){hideCtx();openEdit(ctxId);}
+function ctx_delete(){hideCtx();sel=ctxId;deleteSelected();}
+function ctx_expand(){hideCtx();selectNode(ctxId);expandAI(ctxId);}
+function ctx_color(){hideCtx();openColorModal(ctxId);}
+
+// ═══════════════════════════════════════════════
+//  EDIT MODAL
+// ═══════════════════════════════════════════════
+let editId=null,editPid=null;
+function openEdit(id,pid){
+  editId=id; editPid=pid;
+  document.getElementById('edit-title').textContent=id?'Edit Node':'Tambah Node Baru';
+  document.getElementById('edit-inp').value=id?(nodes[id]?.text||''):'';
+  document.getElementById('edit-modal').classList.add('open');
+  setTimeout(()=>{document.getElementById('edit-inp').focus();document.getElementById('edit-inp').select();},80);
+}
+function closeEdit(){document.getElementById('edit-modal').classList.remove('open');editId=editPid=null;}
+function confirmEdit(){
+  const t=document.getElementById('edit-inp').value.trim();
+  if(!t) return;
+  snapshot();
+  if(editId){ nodes[editId].text=t; }
+  else if(editPid){ const nid=createNode(editPid,t); autoPlace(nid); sel=nid; }
+  render(); if(sel) selectNode(sel); closeEdit(); checkEmpty();
+  scheduleAutoSave();
+}
+document.getElementById('edit-inp').addEventListener('keydown',e=>{
+  if(e.key==='Enter') confirmEdit();
+  if(e.key==='Escape') closeEdit();
+});
+
+// ═══════════════════════════════════════════════
+//  COLOR MODAL
+// ═══════════════════════════════════════════════
+let colorTargetId=null;
+function openColorModal(id){
+  colorTargetId=id;
+  const grid=document.getElementById('color-grid');
+  grid.innerHTML='';
+  PALETTE.forEach(p=>{
+    const btn=document.createElement('div');
+    const tc=p.t==='dark'?'#003B35':'#FFFCF8';
+    btn.style.cssText=`width:92px;height:52px;border-radius:7px;cursor:pointer;
+      background:linear-gradient(135deg,${p.a},${p.b});
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;color:${tc};font-weight:600;
+      font-family:'Inter',sans-serif;letter-spacing:0.1px;
+      transition:transform 0.12s;border:1.5px solid transparent;`;
+    btn.textContent=p.label;
+    btn.onmouseenter=()=>{btn.style.transform='scale(1.06)';btn.style.borderColor='rgba(0,59,53,0.3)';};
+    btn.onmouseleave=()=>{btn.style.transform='';btn.style.borderColor='transparent';};
+    btn.onclick=()=>{
+      if(colorTargetId&&nodes[colorTargetId]){
+        snapshot();
+        nodes[colorTargetId].ca=p.a; nodes[colorTargetId].cb=p.b; nodes[colorTargetId].tc=p.t;
+        render(); scheduleAutoSave();
+      }
+      closeColorModal();
+    };
+    grid.appendChild(btn);
+  });
+  document.getElementById('color-modal').classList.add('open');
+}
+function closeColorModal(){document.getElementById('color-modal').classList.remove('open');}
+
+// ═══════════════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey){
+    if(e.key==='z'&&!e.shiftKey){e.preventDefault();undo();return;}
+    if(e.key==='z'&&e.shiftKey) {e.preventDefault();redo();return;}
+    if(e.key==='y')             {e.preventDefault();redo();return;}
+  }
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  if(e.key==='Escape')                       {hideCtx();closeEdit();closeApiModal();closeColorModal();}
+  if(e.key==='Delete'||e.key==='Backspace')  deleteSelected();
+  if(e.key==='Tab')  {e.preventDefault();addChild();}
+  if(e.key==='F2')   {if(sel) openEdit(sel);}
+});
+
+// ═══════════════════════════════════════════════
+//  UNDO / REDO
+// ═══════════════════════════════════════════════
+function snapshot() {
+  history.push(JSON.stringify(nodes));
+  if (history.length > 60) history.shift();
+  future = [];
+  updateUndoRedo();
+}
+
+function undo() {
+  if (!history.length) return;
+  future.push(JSON.stringify(nodes));
+  nodes = JSON.parse(history.pop());
+  sel = null; render(); checkEmpty(); updateUndoRedo();
+  toast('Undo');
+}
+
+function redo() {
+  if (!future.length) return;
+  history.push(JSON.stringify(nodes));
+  nodes = JSON.parse(future.pop());
+  sel = null; render(); checkEmpty(); updateUndoRedo();
+  toast('Redo');
+}
+
+function updateUndoRedo() {
+  const u = document.getElementById('btn-undo');
+  const r = document.getElementById('btn-redo');
+  if (u) u.style.opacity = history.length ? '1' : '0.35';
+  if (r) r.style.opacity = future.length  ? '1' : '0.35';
+}
+
+// ═══════════════════════════════════════════════
+//  SAVE / LOAD / EXPORT / IMPORT
+// ═══════════════════════════════════════════════
+function saveMap(){ _saveToSlot(true); }
+function loadMap(){ toast('Gunakan Dashboard untuk membuka canvas tersimpan.'); }
+
+function scheduleAutoSave() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    if (!currentCanvasId) return;
+    _saveToSlot(false);
+    const ind = document.getElementById('autosave-ind');
+    if (ind) { ind.style.opacity='1'; setTimeout(()=>{ ind.style.opacity='0'; }, 1800); }
+  }, 2000);
+}
+
+function exportMap(){
+  const b=new Blob([JSON.stringify({nodes},null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a'); a.href=u; a.download='mindara-export.json'; a.click();
+  URL.revokeObjectURL(u);
+}
+
+function importMap() {
+  document.getElementById('import-file').click();
+}
+
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try {
+      const data = JSON.parse(evt.target.result);
+      if (data.nodes && typeof data.nodes === 'object') {
+        snapshot();
+        nodes = data.nodes;
+        sel = null; render(); checkEmpty(); resetView();
+        toast('Canvas berhasil diimport!');
+      } else {
+        toast('Format file tidak valid');
+      }
+    } catch { toast('Gagal membaca file JSON'); }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ═══════════════════════════════════════════════
+//  AI PANEL FEATURES
+// ═══════════════════════════════════════════════
+function togglePanel(){document.getElementById('ai-panel').classList.toggle('hidden');}
+
+// ── Ambil konteks hierarki node (root → parent → current) ──────────────────
+function getNodeContext(id) {
+  const path = [];
+  let cur = nodes[id];
+  while (cur) {
+    path.unshift(cur.text);
+    cur = cur.parentId ? nodes[cur.parentId] : null;
+  }
+  return {
+    root:    path[0]  || '',
+    parent:  path.length > 1 ? path[path.length - 2] : null,
+    current: path[path.length - 1] || '',
+    path,
+    depth:   path.length - 1,
+  };
+}
+
+// ── Cari saran di CONTEXT_BANK berdasarkan hierarki ────────────────────────
+function lookupContextBank(ctx) {
+  const root    = ctx.root.toLowerCase();
+  const parent  = (ctx.parent || '').toLowerCase();
+  const current = ctx.current.toLowerCase();
+
+  // 1. root + current (paling spesifik)
+  if (CONTEXT_BANK[`${root}_${current}`])   return CONTEXT_BANK[`${root}_${current}`];
+  // 2. parent + current
+  if (CONTEXT_BANK[`${parent}_${current}`]) return CONTEXT_BANK[`${parent}_${current}`];
+  // 3. root + partial current (kata pertama)
+  const word = current.split(' ')[0];
+  for (const k of Object.keys(CONTEXT_BANK)) {
+    if (k.startsWith(`${root}_`) && k.includes(word)) return CONTEXT_BANK[k];
+  }
+  // 4. Fallback ke DEMO_BANK keyword match
+  for (const k of Object.keys(DEMO_BANK)) {
+    if (current.includes(k.toLowerCase()) || k.toLowerCase().includes(word)) return DEMO_BANK[k];
+  }
+  return DEMO_BANK.default;
+}
+
+async function generateSuggestions(node){
+  const cont = document.getElementById('chips');
+  cont.innerHTML = '<span class="spin"></span>';
+  await sleep(apiKey && aiProv !== 'demo' ? 0 : 320);
+
+  const ctx = getNodeContext(node.id);
+
+  if (apiKey && aiProv !== 'demo') {
+    try {
+      // Kirim konteks hierarki penuh ke AI
+      const pathStr = ctx.path.join(' → ');
+      const prompt  =
+        `Kamu asisten mind map yang cerdas.\n` +
+        `Topik utama peta: "${ctx.root}"\n` +
+        `Hierarki node: ${pathStr}\n` +
+        `Node saat ini: "${ctx.current}" (level ${ctx.depth})\n\n` +
+        `Buat 7 sub-topik yang SPESIFIK dan RELEVAN untuk node ini. ` +
+        `Pertimbangkan konteks hierarki — jangan saran yang terlalu generik. ` +
+        `Jawab hanya nama topik, satu per baris, maks 3 kata.`;
+      const res   = await callAI(prompt);
+      const items = res.split('\n').map(s => s.replace(/^[-•\d.]\s*/,'').trim()).filter(Boolean).slice(0,8);
+      cont.innerHTML = items.map(chip).join('');
+    } catch { cont.innerHTML = demoChips(ctx); }
+  } else {
+    cont.innerHTML = demoChips(ctx);
+  }
+
+  // Konteks & relasi
+  const rel   = document.getElementById('ai-relate');
+  rel.style.display = 'block';
+  const bank  = lookupContextBank(ctx);
+  const depth = ctx.depth;
+  const hint  = depth === 0
+    ? 'Ini node root. Saran di atas adalah cabang utama yang relevan.'
+    : depth === 1
+    ? `Cabang dari <strong>${ctx.root}</strong>. Saran di atas spesifik untuk konteks ini.`
+    : `Sub-cabang dari <strong>${ctx.parent}</strong> dalam peta <strong>${ctx.root}</strong>.`;
+  rel.innerHTML = `${hint} Klik saran untuk langsung menambahkan ke peta.`;
+}
+
+function demoChips(ctx) {
+  const bank = lookupContextBank(ctx);
+  return bank.slice(0, 8).map(chip).join('');
+}
+
+function chip(s){
+  return `<span class="chip" onclick="addChip('${s.replace(/'/g,"\\'")}')">${s}</span>`;
+}
+
+function addChip(text){
+  if(!sel) return;
+  snapshot();
+  const nid=createNode(sel,text);
+  autoPlace(nid); render(); selectNode(nid);
+  scheduleAutoSave();
+}
+
+async function askAI(){
+  const q=document.getElementById('ai-q').value.trim();
+  if(!q) return;
+  const resp=document.getElementById('ai-resp');
+  resp.style.display='block';
+  resp.innerHTML='<span class="spin"></span> Memproses...';
+  const ctx=nodes[sel]?.text||'topik ini';
+  const prompt=`Mind map node: "${ctx}". Pertanyaan: ${q}. Jawab bahasa Indonesia, maks 3 kalimat.`;
+  if(!apiKey||aiProv==='demo'){
+    await sleep(800);
+    resp.innerHTML=`<strong>${ctx}</strong>: Ini adalah area yang mencakup beberapa dimensi penting — definisi yang jelas, konteks penerapan di Indonesia, dan langkah implementasi yang terukur.`;
+  }else{
+    try{resp.innerHTML=await callAI(prompt);}
+    catch(e){resp.innerHTML=`<span style="color:var(--danger)">Error: ${e.message}</span>`;}
+  }
+  document.getElementById('ai-q').value='';
+}
+
+document.getElementById('ai-q').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askAI();}
+});
+
+async function expandAI(id){
+  if(!nodes[id]) return;
+  snapshot();
+  const text=nodes[id].text;
+  toast('✦ Mengembangkan ide...');
+  let items;
+  if(apiKey&&aiProv!=='demo'){
+    try{
+      const res=await callAI(`Buat 5 sub-topik singkat untuk "${text}". Satu per baris.`);
+      items=res.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5);
+    }catch{items=(DEMO_BANK[text]||DEMO_BANK.default).slice(0,5);}
+  }else{
+    await sleep(700);
+    items=(DEMO_BANK[text]||DEMO_BANK.default).slice(0,5);
+  }
+  items.forEach((t,i)=>setTimeout(()=>{
+    const nid=createNode(id,t); autoPlace(nid); render();
+  },i*160));
+}
+
+// ═══════════════════════════════════════════════
+//  AI API CALLS
+// ═══════════════════════════════════════════════
+async function callAI(prompt){
+  if(aiProv==='openai'){
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+      body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:prompt}],max_tokens:400})
+    });
+    const d=await r.json();
+    if(d.error) throw new Error(d.error.message);
+    return d.choices[0].message.content;
+  }
+  if(aiProv==='claude'){
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,messages:[{role:'user',content:prompt}]})
+    });
+    const d=await r.json();
+    if(d.error) throw new Error(d.error.message);
+    return d.content[0].text;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  API KEY MODAL
+// ═══════════════════════════════════════════════
+function openApiModal(){
+  document.getElementById('key-inp').value=apiKey;
+  document.getElementById('prov-sel').value=aiProv;
+  document.getElementById('api-modal').classList.add('open');
+}
+function closeApiModal(){document.getElementById('api-modal').classList.remove('open');}
+function saveApiKey(){
+  apiKey=document.getElementById('key-inp').value.trim();
+  aiProv=document.getElementById('prov-sel').value;
+  localStorage.setItem('mi_key',apiKey);
+  localStorage.setItem('mi_prov',aiProv);
+  const b=document.getElementById('api-badge');
+  if(apiKey&&aiProv!=='demo'){b.textContent=aiProv==='openai'?'OpenAI':'Claude';b.className='api-badge set';}
+  else{b.textContent='Demo';b.className='api-badge demo';}
+  closeApiModal(); toast('Pengaturan AI disimpan');
+}
+
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
+function toast(msg){
+  const el=document.createElement('div');
+  el.className='toast'; el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2300);
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ═══════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  if(apiKey&&aiProv!=='demo'){
+    const b=document.getElementById('api-badge');
+    b.textContent=aiProv==='openai'?'OpenAI':'Claude';
+    b.className='api-badge set';
+  }
+  updateVP();
+  // Mulai dari dashboard
+  showDashboard();
+});
+</script>
+</body>
+</html>

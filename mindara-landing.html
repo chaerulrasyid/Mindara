@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindara — Dari satu ide, ribuan kemungkinan</title>
+<meta name="description" content="Buat mind map dari satu kalimat. AI Mindara yang kerjakan sisanya — cocok untuk mahasiswa dan pekerja.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #FFFCF8;
+  --surface: #F4EFE6;
+  --border:  #D4C9B5;
+  --text:    #003B35;
+  --muted:   #4A7A72;
+  --faint:   #8AA49F;
+  --accent:  #FFA858;
+  --accent2: #E8914A;
+  --font:    'Inter', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(255,252,248,0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center;
+  padding: 0 40px;
+  z-index: 100;
+}
+.nav-logo {
+  font-size: 20px; font-weight: 800;
+  color: var(--text); letter-spacing: -0.5px;
+  text-decoration: none;
+}
+.nav-logo .dot { color: var(--accent); }
+.nav-links { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.nav-link {
+  padding: 7px 14px; border-radius: 6px;
+  font-size: 13.5px; font-weight: 500;
+  color: var(--muted); text-decoration: none;
+  transition: all 0.12s;
+}
+.nav-link:hover { background: var(--surface); color: var(--text); }
+.nav-cta {
+  padding: 8px 18px;
+  background: var(--text); color: var(--bg);
+  border-radius: 7px; font-size: 13.5px;
+  font-weight: 600; text-decoration: none;
+  transition: background 0.12s;
+}
+.nav-cta:hover { background: #004F46; }
+
+/* ── SECTIONS ── */
+section { width: 100%; }
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── HERO ── */
+#hero {
+  padding: 140px 24px 100px;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,168,88,0.12);
+  border: 1px solid rgba(255,168,88,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12.5px; font-weight: 600;
+  color: var(--accent2);
+  margin-bottom: 28px;
+  letter-spacing: 0.2px;
+}
+
+h1 {
+  font-size: clamp(36px, 6vw, 58px);
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+h1 .highlight { color: var(--accent); }
+
+.hero-sub {
+  font-size: 17px; color: var(--muted);
+  max-width: 520px; margin: 0 auto 44px;
+  line-height: 1.65; font-weight: 400;
+}
+
+/* Waitlist form */
+.waitlist-form {
+  display: flex; gap: 10px; max-width: 480px;
+  margin: 0 auto 16px;
+}
+.waitlist-input {
+  flex: 1;
+  padding: 13px 18px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px; color: var(--text);
+  font-family: var(--font); outline: none;
+  transition: border-color 0.15s;
+}
+.waitlist-input:focus { border-color: var(--text); }
+.waitlist-input::placeholder { color: var(--faint); }
+
+.btn-waitlist {
+  padding: 13px 22px;
+  background: var(--text); color: var(--bg);
+  border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 700;
+  font-family: var(--font); cursor: pointer;
+  white-space: nowrap; transition: background 0.12s;
+}
+.btn-waitlist:hover { background: #004F46; }
+.btn-waitlist:disabled { background: var(--faint); cursor: wait; }
+
+.form-note {
+  font-size: 12px; color: var(--faint);
+  margin-bottom: 20px;
+}
+
+.btn-demo {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.12s;
+  font-family: var(--font);
+  cursor: pointer;
+}
+.btn-demo:hover {
+  background: var(--surface);
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* Success state */
+#success-msg {
+  display: none;
+  background: rgba(26,107,92,0.08);
+  border: 1.5px solid rgba(26,107,92,0.25);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 14px; color: var(--text);
+  font-weight: 500; max-width: 480px;
+  margin: 0 auto 16px; text-align: center;
+}
+
+/* ── PAIN STRIP ── */
+#pain-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 24px;
+  background: var(--surface);
+}
+.pain-grid {
+  max-width: 860px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.pain-item {
+  padding: 20px 28px;
+  border-right: 1px solid var(--border);
+}
+.pain-item:last-child { border-right: none; }
+.pain-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--faint); margin-bottom: 8px;
+}
+.pain-before {
+  font-size: 13.5px; color: var(--muted);
+  margin-bottom: 10px; line-height: 1.5;
+}
+.pain-after {
+  font-size: 13.5px; font-weight: 600;
+  color: var(--text); line-height: 1.5;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+.pain-arrow { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+@media (max-width: 640px) {
+  .pain-grid { grid-template-columns: 1fr !important; }
+  .pain-item { border-right: none !important; border-bottom: 1px solid var(--border); }
+  .pain-item:last-child { border-bottom: none; }
+}
+
+/* ── DEMO PREVIEW ── */
+#preview {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.preview-label {
+  font-size: 11.5px; font-weight: 700;
+  color: var(--faint); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 32px;
+}
+
+.preview-box {
+  max-width: 780px; margin: 0 auto;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,59,53,0.08);
+}
+
+/* Fake browser chrome */
+.preview-chrome {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 6px;
+}
+.chrome-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%; background: var(--border);
+}
+.chrome-url {
+  margin-left: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 11.5px; color: var(--faint);
+  flex: 1; max-width: 260px;
+}
+
+/* Mini mindmap inside preview */
+.preview-canvas {
+  padding: 32px 20px;
+  min-height: 280px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+}
+.preview-canvas::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(0,59,53,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Mini mindmap SVG */
+.mindmap-preview {
+  width: 100%; max-width: 680px;
+  height: 240px;
+  position: relative; z-index: 1;
+}
+
+/* ── HOW IT WORKS ── */
+#how {
+  padding: 96px 24px;
+}
+#how .container { text-align: center; }
+
+.section-label {
+  font-size: 11.5px; font-weight: 700;
+  color: var(--accent2); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 12px;
+}
+h2 {
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 800; letter-spacing: -1px;
+  margin-bottom: 56px; color: var(--text);
+  line-height: 1.2;
+}
+
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 32px; text-align: left;
+}
+
+.step {
+  padding: 28px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  position: relative;
+}
+.step-num {
+  width: 36px; height: 36px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800;
+  margin-bottom: 16px;
+}
+.step h3 {
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px; letter-spacing: -0.3px;
+}
+.step p { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+
+.step-accent { border-color: rgba(255,168,88,0.4); }
+.step-accent .step-num { background: var(--accent); color: var(--text); }
+
+/* ── FOR WHO ── */
+#for-who {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 24px;
+}
+#for-who .container { text-align: center; }
+
+.personas {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 24px; margin-top: 0; text-align: left;
+}
+
+.persona {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 30px;
+}
+.persona-icon {
+  font-size: 32px; margin-bottom: 14px;
+}
+.persona h3 {
+  font-size: 17px; font-weight: 700;
+  margin-bottom: 6px; letter-spacing: -0.3px;
+}
+.persona .persona-role {
+  font-size: 12px; font-weight: 600;
+  color: var(--accent2);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+.persona ul {
+  list-style: none; display: flex;
+  flex-direction: column; gap: 8px;
+}
+.persona ul li {
+  font-size: 13.5px; color: var(--muted);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.persona ul li::before {
+  content: '→';
+  color: var(--accent);
+  font-weight: 700; flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── WAITLIST CTA BOTTOM ── */
+#cta {
+  padding: 100px 24px;
+  text-align: center;
+}
+#cta h2 { margin-bottom: 12px; }
+#cta p { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
+
+.waitlist-form-2 {
+  display: flex; gap: 10px; max-width: 440px;
+  margin: 0 auto 14px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 40px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.footer-logo {
+  font-size: 16px; font-weight: 800;
+  color: var(--text); letter-spacing: -0.4px;
+}
+.footer-logo .dot { color: var(--accent); }
+.footer-copy {
+  font-size: 12.5px; color: var(--faint);
+}
+
+/* ── COUNTER ── */
+.counter-wrap {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-top: 32px;
+  font-size: 13px; color: var(--faint);
+}
+.counter-num {
+  font-weight: 800; font-size: 15px;
+  color: var(--text);
+}
+.counter-dots { display: flex; gap: 4px; }
+.counter-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.3;
+}
+.counter-dot.active { opacity: 1; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--text); color: var(--bg);
+  border-radius: 8px; padding: 11px 20px;
+  font-size: 13.5px; font-weight: 500;
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0,59,53,0.2);
+  animation: fadeUp 0.2s ease;
+  white-space: nowrap;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateX(-50%) translateY(8px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  nav { padding: 0 20px; }
+  .nav-links .nav-link { display: none; }
+  h1 { letter-spacing: -1px; }
+  .waitlist-form { flex-direction: column; }
+  .steps { grid-template-columns: 1fr; }
+  .personas { grid-template-columns: 1fr; }
+  .waitlist-form-2 { flex-direction: column; }
+  footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Mindar<span class="dot">a</span></a>
+  <div class="nav-links">
+    <a href="#how" class="nav-link">Cara Kerja</a>
+    <a href="#for-who" class="nav-link">Untuk Siapa</a>
+    <a href="app.html" target="_blank" class="nav-cta">Coba Demo →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">✦ Untuk Profesional & Tim — Early Access Terbatas</div>
+
+  <h1>
+    Ide berantakan<br>
+    jadi <span class="highlight">struktur siap presentasi.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Ketik topik, masalah, atau hasil meeting — Mindara langsung susun jadi mind map terstruktur yang bisa kamu bawa ke rapat atau deck berikutnya. Dalam hitungan detik.
+  </p>
+
+  <!-- CTA Buttons -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+    <a href="https://forms.gle/EF9WQKcZHfSrvgst5" target="_blank" class="btn-waitlist" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 32px; font-size:15px;">
+      Daftar Early Access →
+    </a>
+    <p class="form-note">Gratis. Hanya butuh 30 detik via WhatsApp.</p>
+    <a href="app.html" target="_blank" class="btn-demo">
+      Atau coba demo dulu →
+    </a>
+  </div>
+
+  <!-- Social proof counter -->
+  <div class="counter-wrap">
+    <div class="counter-dots">
+      <div class="counter-dot active"></div>
+      <div class="counter-dot active"></div>
+      <div class="counter-dot"></div>
+    </div>
+    <span><span class="counter-num" id="counter">–</span> orang sudah bergabung di waitlist</span>
+  </div>
+</section>
+
+<!-- PAIN STRIP -->
+<section id="pain-strip">
+  <div class="pain-grid" style="grid-template-columns: 1fr 1fr; max-width: 720px;">
+    <div class="pain-item">
+      <div class="pain-label">Masalah yang diselesaikan</div>
+      <div class="pain-before">💭 Punya banyak ide tapi tidak tahu harus mulai dari mana</div>
+      <div class="pain-after"><span class="pain-arrow">→</span> Mindara susun strukturnya dalam detik, kamu tinggal isi</div>
+    </div>
+    <div class="pain-item" style="border-right: none;">
+      <div class="pain-label">Masalah yang diselesaikan</div>
+      <div class="pain-before">🗒️ Catatan dan hasil brainstorm berserakan di mana-mana</div>
+      <div class="pain-after"><span class="pain-arrow">→</span> Satu topik, langsung jadi mind map yang bisa dibagikan</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS MINDARA -->
+<section id="what-is" style="padding: 72px 24px; text-align: center;">
+  <div class="container" style="max-width: 680px;">
+    <div class="section-label">Apa itu Mindara?</div>
+    <h2 style="margin-bottom: 20px;">Alat berpikir visual<br>yang ditenagai AI.</h2>
+    <p style="font-size: 16px; color: var(--muted); line-height: 1.75; margin-bottom: 32px;">
+      Mindara adalah aplikasi mind map berbasis AI. Kamu ketik satu topik atau pertanyaan — Mindara langsung generate peta ide yang terstruktur: cabang utama, sub-poin, dan hubungan antar ide, semuanya otomatis.
+    </p>
+    <p style="font-size: 16px; color: var(--muted); line-height: 1.75;">
+      Hasilnya bukan template generik. Mindara memahami konteks topikmu dan menyesuaikan struktur sesuai kebutuhan — lalu kamu bisa edit, perluas, atau hapus bagian yang tidak relevan. Pikiran yang tadinya penuh dan tidak teratur, jadi peta yang bisa langsung dikerjakan.
+    </p>
+  </div>
+</section>
+
+<!-- DEMO PREVIEW -->
+<section id="preview">
+  <div class="preview-label">Tampilan Mindara</div>
+  <div class="preview-box">
+    <div class="preview-chrome">
+      <div class="chrome-dot"></div>
+      <div class="chrome-dot"></div>
+      <div class="chrome-dot"></div>
+      <div class="chrome-url">mindara.id</div>
+    </div>
+    <div class="preview-canvas">
+      <svg class="mindmap-preview" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="root-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#003B35"/>
+            <stop offset="100%" stop-color="#004F46"/>
+          </linearGradient>
+          <linearGradient id="b1-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFA858"/>
+            <stop offset="100%" stop-color="#FFB870"/>
+          </linearGradient>
+          <linearGradient id="b2-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1A6B5C"/>
+            <stop offset="100%" stop-color="#228A78"/>
+          </linearGradient>
+          <linearGradient id="b3-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#C97030"/>
+            <stop offset="100%" stop-color="#DD8040"/>
+          </linearGradient>
+          <linearGradient id="b4-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#004A42"/>
+            <stop offset="100%" stop-color="#006055"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Edges -->
+        <path d="M340 120 C280 120 200 80 155 70" fill="none" stroke="#FFA858" stroke-width="2" opacity="0.45"/>
+        <path d="M340 120 C290 120 230 95 190 105" fill="none" stroke="#1A6B5C" stroke-width="2" opacity="0.45"/>
+        <path d="M340 120 C390 120 450 95 490 105" fill="none" stroke="#C97030" stroke-width="2" opacity="0.45"/>
+        <path d="M340 120 C390 120 460 120 525 70" fill="none" stroke="#004A42" stroke-width="2" opacity="0.45"/>
+
+        <!-- Child edges -->
+        <path d="M155 70 C120 70 95 52 75 48" fill="none" stroke="#FFA858" stroke-width="1.5" opacity="0.3"/>
+        <path d="M155 70 C120 70 95 82 75 88" fill="none" stroke="#FFA858" stroke-width="1.5" opacity="0.3"/>
+        <path d="M490 105 C520 105 545 88 565 84" fill="none" stroke="#C97030" stroke-width="1.5" opacity="0.3"/>
+        <path d="M490 105 C520 105 545 118 565 122" fill="none" stroke="#C97030" stroke-width="1.5" opacity="0.3"/>
+
+        <!-- Root node -->
+        <rect x="270" y="96" width="140" height="48" rx="10" fill="url(#root-g)"/>
+        <text x="340" y="120" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Skripsi S1</text>
+
+        <!-- Branch nodes -->
+        <rect x="95" y="52" width="120" height="36" rx="7" fill="url(#b1-g)"/>
+        <text x="155" y="70" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Pendahuluan</text>
+
+        <rect x="110" y="86" width="120" height="36" rx="7" fill="url(#b2-g)"/>
+        <text x="170" y="104" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Kajian Pustaka</text>
+
+        <rect x="410" y="86" width="120" height="36" rx="7" fill="url(#b3-g)"/>
+        <text x="470" y="104" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Metodologi</text>
+
+        <rect x="445" y="52" width="120" height="36" rx="7" fill="url(#b4-g)"/>
+        <text x="505" y="70" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Hasil & Bahasan</text>
+
+        <!-- Child nodes -->
+        <rect x="10" y="32" width="90" height="30" rx="5" fill="#FFA858" opacity="0.85"/>
+        <text x="55" y="47" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Latar Belakang</text>
+
+        <rect x="10" y="72" width="90" height="30" rx="5" fill="#FFA858" opacity="0.85"/>
+        <text x="55" y="87" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Rumusan Masalah</text>
+
+        <rect x="560" y="68" width="90" height="30" rx="5" fill="#C97030" opacity="0.85"/>
+        <text x="605" y="83" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Analisis Data</text>
+
+        <rect x="560" y="106" width="90" height="30" rx="5" fill="#C97030" opacity="0.85"/>
+        <text x="605" y="121" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Hasil Uji</text>
+
+        <!-- AI badge -->
+        <rect x="270" y="160" width="140" height="28" rx="14" fill="rgba(255,168,88,0.15)" stroke="rgba(255,168,88,0.4)" stroke-width="1"/>
+        <text x="340" y="174" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#E8914A" text-anchor="middle" dominant-baseline="middle">✦ Dibuat AI dalam 2 detik</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">Cara Kerja</div>
+    <h2>Dari pikiran yang penuh,<br>jadi peta yang bisa dikerjakan.</h2>
+    <div class="steps">
+      <div class="step step-accent">
+        <div class="step-num">1</div>
+        <h3>Tuangkan topik atau idemu</h3>
+        <p>Ketik apa saja — "Strategi pemasaran Q3", "Rencana onboarding tim baru", "Evaluasi proyek kemarin". Tidak perlu rapi.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI susun strukturnya</h3>
+        <p>Mindara langsung generate cabang utama, sub-poin, dan hubungan antar ide — dalam hitungan detik, bukan jam.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Edit, presentasikan, bagikan</h3>
+        <p>Ubah yang tidak sesuai, minta AI perluas bagian tertentu, lalu bawa hasilnya ke rapat atau deck-mu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section id="for-who">
+  <div class="container">
+    <div class="section-label">Untuk Siapa</div>
+    <h2 style="margin-bottom:40px;">Untuk siapa saja yang<br>berpikir lebih cepat dari yang bisa ditulis.</h2>
+    <div class="personas" style="grid-template-columns: 1.4fr 1fr;">
+      <div class="persona" style="border-color: rgba(255,168,88,0.5); background: rgba(255,168,88,0.04);">
+        <div class="persona-icon">💼</div>
+        <div class="persona-role">Profesional & Tim Kerja</div>
+        <h3>Dari ide berantakan jadi<br>struktur yang bisa dipresentasikan.</h3>
+        <ul>
+          <li>Strategi, OKR, atau project plan tersusun sebelum rapat dimulai</li>
+          <li>Hasil brainstorm tim tidak hilang — langsung jadi peta yang bisa dibagikan</li>
+          <li>Outline deck presentasi siap dalam menit, bukan malam sebelumnya</li>
+          <li>Petakan risiko dan solusi sebelum eksekusi — bukan sesudah</li>
+        </ul>
+      </div>
+      <div class="persona" style="opacity: 0.78;">
+        <div class="persona-icon">🎓</div>
+        <div class="persona-role">Mahasiswa — Segera Hadir</div>
+        <h3>Dari judul buntu jadi<br>kerangka siap dikerjakan.</h3>
+        <ul>
+          <li>Saat ini kami validasi untuk profesional terlebih dahulu</li>
+          <li>Mahasiswa akan jadi segmen berikutnya</li>
+          <li>Daftar waitlist — kami kabari saat tersedia</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section id="cta">
+  <div class="container">
+    <div class="section-label">Early Access</div>
+    <h2>Rapat berikutnya,<br>struktur sudah siap.</h2>
+    <p>Daftar sekarang dan jadilah yang pertama akses Mindara penuh saat diluncurkan. Gratis untuk early adopter.</p>
+
+    <a href="https://forms.gle/EF9WQKcZHfSrvgst5" target="_blank" class="btn-waitlist" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 32px; font-size:15px; border-radius:8px;">
+      Daftar Early Access →
+    </a>
+
+    <p class="form-note" style="margin-top:12px;">Gratis selamanya untuk early adopter.</p>
+
+    <a href="app.html" target="_blank" class="btn-demo" style="margin-top:4px;">
+      Atau coba demo dulu →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Mindar<span class="dot">a</span></div>
+  <div class="footer-copy">© 2026 Mindara. Dibuat dengan ♥ di Indonesia.</div>
+</footer>
+
+<script>
+// ── WAITLIST SUBMIT ──────────────────────────────────────────────────────────
+// Ganti URL di bawah dengan Formspree URL Anda setelah daftar di formspree.io
+const FORMSPREE_URL = 'https://formspree.io/f/GANTI_DENGAN_FORM_ID_ANDA';
+
+async function submitWaitlist(e, formId) {
+  e.preventDefault();
+
+  const emailId   = formId === 'form1' ? 'email-1' : 'email-2';
+  const btnId     = formId === 'form1' ? 'btn-1'   : 'btn-2';
+  const email     = document.getElementById(emailId).value.trim();
+  const btn       = document.getElementById(btnId);
+
+  if (!email) return;
+
+  btn.disabled    = true;
+  btn.textContent = 'Mendaftar...';
+
+  try {
+    // Cek apakah Formspree sudah dikonfigurasi
+    if (FORMSPREE_URL.includes('GANTI_DENGAN')) {
+      // Mode demo — simulasi sukses
+      await sleep(800);
+      onSuccess(email);
+    } else {
+      const res = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email, source: formId, product: 'Mindara' })
+      });
+      if (res.ok) {
+        onSuccess(email);
+      } else {
+        throw new Error('Form error');
+      }
+    }
+  } catch {
+    btn.disabled    = false;
+    btn.textContent = formId === 'form1' ? 'Daftar Waitlist' : 'Daftar Gratis';
+    showToast('Ups, coba lagi sebentar ya.');
+  }
+}
+
+function onSuccess(email) {
+  // Simpan di localStorage
+  const list = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
+  if (!list.includes(email)) list.push(email);
+  localStorage.setItem('mi_waitlist', JSON.stringify(list));
+
+  // Tampilkan pesan sukses
+  document.getElementById('waitlist-form-1').style.display = 'none';
+  document.getElementById('success-msg').style.display    = 'block';
+
+  // Update counter
+  updateCounter();
+  showToast('✓ Berhasil didaftarkan!');
+}
+
+// ── COUNTER ──────────────────────────────────────────────────────────────────
+function updateCounter() {
+  // Ambil dari localStorage (untuk demo — di produksi ini dari API)
+  const list  = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
+  const base  = 47; // seed angka supaya tidak terlihat 0
+  const total = base + list.length;
+  document.getElementById('counter').textContent = total;
+}
+
+// ── SMOOTH SCROLL ────────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.querySelector(a.getAttribute('href'));
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  updateCounter();
+
+  // Cek kalau sudah pernah daftar
+  const list = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
+  if (list.length > 0) {
+    document.getElementById('waitlist-form-1').style.display = 'none';
+    document.getElementById('success-msg').style.display    = 'block';
+  }
+});
+</script>
+</body>
+</html>
