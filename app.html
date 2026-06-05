@@ -682,6 +682,42 @@ kbd {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+/* ── GRID PANEL ── */
+#grid-panel {
+  position: fixed; left: 72px; z-index: 200;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 14px 14px 16px;
+  box-shadow: 0 4px 24px rgba(0,59,53,0.13); width: 192px;
+  display: none;
+}
+.gp-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text-faint);
+  font-family: var(--font-head); margin: 12px 0 7px;
+}
+.gp-label:first-child { margin-top: 0; }
+.gp-opt {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 8px 10px; border-radius: 7px;
+  border: none; background: transparent; cursor: pointer;
+  font-size: 13px; color: var(--text-muted);
+  font-family: var(--font-head); font-weight: 500;
+  transition: background 0.1s; margin-bottom: 2px; text-align: left;
+}
+.gp-opt:hover { background: var(--surface); color: var(--text); }
+.gp-opt.active { background: var(--primary); color: #fff; }
+.gp-opt.active svg { stroke: #fff !important; fill: #fff !important; }
+.gp-row { display: flex; gap: 6px; }
+.gp-size {
+  flex: 1; padding: 7px 4px; border-radius: 7px;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; font-size: 12px; font-weight: 600;
+  color: var(--text-muted); font-family: var(--font-head);
+  transition: all 0.1s;
+}
+.gp-size:hover { border-color: var(--text); color: var(--text); }
+.gp-size.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
 /* ══════════════════════════════════════════════
    DASHBOARD
 ══════════════════════════════════════════════ */
@@ -1019,7 +1055,7 @@ kbd {
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.3-.4-.6-.4-1 0-1.1.9-2 2-2h2.4A5.5 5.5 0 0022 12 10 10 0 0012 2z"/><circle cx="7" cy="10" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14" cy="7" r="1"/><circle cx="17" cy="10" r="1"/></svg>
   </button>
   <!-- Dots/Grid toggle -->
-  <button class="ls-btn active" onclick="toggleGrid()" id="ls-grid" data-tip="Grid">
+  <button class="ls-btn active" onclick="toggleGridPanel(event)" id="ls-grid" data-tip="Grid">
     <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="19" cy="5" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="19" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/><circle cx="19" cy="19" r="1" fill="currentColor"/></svg>
   </button>
 
@@ -1029,6 +1065,45 @@ kbd {
   <button class="ls-btn ls-ai" onclick="togglePanel()" data-tip="Asisten AI">
     <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/></svg>
   </button>
+</div>
+
+<!-- GRID PANEL -->
+<div id="grid-panel">
+  <div class="gp-label">Grid Style</div>
+  <button class="gp-opt active" id="gp-dots" onclick="setGridStyle('dots')">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" stroke="none">
+      <circle cx="2" cy="2" r="1.2"/><circle cx="8" cy="2" r="1.2"/><circle cx="14" cy="2" r="1.2"/>
+      <circle cx="2" cy="8" r="1.2"/><circle cx="8" cy="8" r="1.2"/><circle cx="14" cy="8" r="1.2"/>
+      <circle cx="2" cy="14" r="1.2"/><circle cx="8" cy="14" r="1.2"/><circle cx="14" cy="14" r="1.2"/>
+    </svg>
+    Dots
+  </button>
+  <button class="gp-opt" id="gp-lines" onclick="setGridStyle('lines')">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/>
+    </svg>
+    Lines
+  </button>
+  <button class="gp-opt" id="gp-none" onclick="setGridStyle('none')">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="8" cy="8" r="6"/>
+    </svg>
+    None
+  </button>
+
+  <div class="gp-label">Grid Size</div>
+  <div class="gp-row">
+    <button class="gp-size" id="gps-s" onclick="setGridSize('s')">S</button>
+    <button class="gp-size active" id="gps-m" onclick="setGridSize('m')">M</button>
+    <button class="gp-size" id="gps-l" onclick="setGridSize('l')">L</button>
+  </div>
+
+  <div class="gp-label" style="margin-top:12px;">Opacity</div>
+  <div class="gp-row">
+    <button class="gp-size" id="gpo-light" onclick="setGridOpacity('light')">Light</button>
+    <button class="gp-size active" id="gpo-med" onclick="setGridOpacity('med')">Med</button>
+    <button class="gp-size" id="gpo-strong" onclick="setGridOpacity('strong')">Strong</button>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -1530,14 +1605,78 @@ function _enterEditor(name, showWelcome) {
   }
 }
 
-function toggleGrid() {
-  const wrap = document.getElementById('canvas-wrap');
-  const btn  = document.getElementById('ls-grid');
-  const on   = wrap.dataset.grid !== 'off';
-  wrap.dataset.grid = on ? 'off' : 'on';
-  wrap.style.backgroundImage = on ? 'none' : '';
-  btn.classList.toggle('active', !on);
+// ═══════════════════════════════════════════════
+//  GRID PANEL
+// ═══════════════════════════════════════════════
+let gridStyle = localStorage.getItem('mi_grid_style') || 'dots';
+let gridSize  = localStorage.getItem('mi_grid_size')  || 'm';
+let gridOpac  = localStorage.getItem('mi_grid_opac')  || 'med';
+
+const GRID_SPACING = { s: 20, m: 28, l: 44 };
+const GRID_OPACITY_LIGHT = { light: 0.05, med: 0.10, strong: 0.22 };
+const GRID_OPACITY_DARK  = { light: 0.06, med: 0.11, strong: 0.22 };
+
+function toggleGridPanel(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('grid-panel');
+  const btn   = document.getElementById('ls-grid');
+  if (panel.style.display === 'block') {
+    panel.style.display = 'none';
+    return;
+  }
+  // Position next to button
+  const r = btn.getBoundingClientRect();
+  panel.style.top  = Math.min(r.top, window.innerHeight - 320) + 'px';
+  panel.style.display = 'block';
+  syncGridUI();
 }
+
+function syncGridUI() {
+  ['dots','lines','none'].forEach(s => {
+    document.getElementById('gp-'+s)?.classList.toggle('active', gridStyle === s);
+  });
+  ['s','m','l'].forEach(s => {
+    document.getElementById('gps-'+s)?.classList.toggle('active', gridSize === s);
+  });
+  ['light','med','strong'].forEach(s => {
+    document.getElementById('gpo-'+s)?.classList.toggle('active', gridOpac === s);
+  });
+  // ls-grid button active when grid is visible
+  document.getElementById('ls-grid')?.classList.toggle('active', gridStyle !== 'none');
+}
+
+function setGridStyle(s) { gridStyle = s; localStorage.setItem('mi_grid_style', s); applyGridSettings(); syncGridUI(); }
+function setGridSize(s)  { gridSize  = s; localStorage.setItem('mi_grid_size',  s); applyGridSettings(); syncGridUI(); }
+function setGridOpacity(s){ gridOpac = s; localStorage.setItem('mi_grid_opac',  s); applyGridSettings(); syncGridUI(); }
+
+function applyGridSettings() {
+  const isDark = localStorage.getItem('mi_bg_dark') === '1';
+  const opTable = isDark ? GRID_OPACITY_DARK : GRID_OPACITY_LIGHT;
+  const op   = opTable[gridOpac];
+  const sp   = GRID_SPACING[gridSize];
+  const color = isDark ? `rgba(255,255,255,${op})` : `rgba(0,59,53,${op})`;
+
+  let bgImg = 'none';
+  if (gridStyle === 'dots') {
+    bgImg = `radial-gradient(circle, ${color} 1.2px, transparent 1.2px)`;
+  } else if (gridStyle === 'lines') {
+    bgImg = `linear-gradient(${color} 1px, transparent 1px), linear-gradient(90deg, ${color} 1px, transparent 1px)`;
+  }
+
+  let styleTag = document.getElementById('bg-dot-style');
+  if (!styleTag) { styleTag = document.createElement('style'); styleTag.id = 'bg-dot-style'; document.head.appendChild(styleTag); }
+
+  const bgColor = localStorage.getItem('mi_bg') || '#FFFCF8';
+  styleTag.textContent = `#canvas-wrap { background: ${bgColor} !important; } #canvas-wrap::before { background-image: ${bgImg} !important; background-size: ${sp}px ${sp}px !important; }`;
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', e => {
+  const panel = document.getElementById('grid-panel');
+  if (panel && panel.style.display === 'block' && !panel.contains(e.target) && e.target.id !== 'ls-grid') {
+    panel.style.display = 'none';
+  }
+});
 
 function setEditorTool(tool) {
   // Visual active state
@@ -1631,10 +1770,9 @@ async function generateMap(topic) {
 }
 
 function getDemoMap(topic) {
-  // Find closest match
+  const t = topic.toLowerCase();
   for (const key of Object.keys(DEMO_MAPS)) {
-    if (topic.toLowerCase().includes(key.toLowerCase()) ||
-        key.toLowerCase().includes(topic.toLowerCase().split(' ')[0])) {
+    if (t.includes(key.toLowerCase())) {
       return DEMO_MAPS[key];
     }
   }
@@ -2182,6 +2320,7 @@ function applyBg(preset) {
   localStorage.setItem('mi_bg', preset.bg);
   localStorage.setItem('mi_bg_dot', preset.dot);
   localStorage.setItem('mi_bg_dark', preset.dark ? '1' : '0');
+  applyGridSettings(); // re-sync grid dot color for new bg
 }
 
 // ═══════════════════════════════════════════════
@@ -2495,13 +2634,14 @@ window.addEventListener('load',()=>{
     b.textContent=aiProv==='openai'?'OpenAI':'Claude';
     b.className='api-badge set';
   }
-  // Restore background
-  const savedBg  = localStorage.getItem('mi_bg');
-  const savedDot = localStorage.getItem('mi_bg_dot');
-  if(savedBg && savedDot) {
+  // Restore background + grid
+  const savedBg = localStorage.getItem('mi_bg');
+  if (savedBg) {
     const dark = localStorage.getItem('mi_bg_dark') === '1';
-    applyBg({ bg: savedBg, dot: savedDot, dark });
+    applyBg({ bg: savedBg, dot: '', dark });
   }
+  applyGridSettings();
+  syncGridUI();
   updateVP();
   showDashboard();
 });
