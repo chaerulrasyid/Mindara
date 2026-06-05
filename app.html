@@ -1015,7 +1015,7 @@ kbd {
   <div class="ls-sep"></div>
 
   <!-- Background color (soon) -->
-  <button class="ls-btn disabled" data-tip="Warna Latar (Segera)">
+  <button class="ls-btn" onclick="openBgModal()" data-tip="Warna Latar">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 000 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.3-.4-.6-.4-1 0-1.1.9-2 2-2h2.4A5.5 5.5 0 0022 12 10 10 0 0012 2z"/><circle cx="7" cy="10" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14" cy="7" r="1"/><circle cx="17" cy="10" r="1"/></svg>
   </button>
   <!-- Dots/Grid toggle -->
@@ -1160,6 +1160,17 @@ kbd {
 </div>
 
 <input type="file" id="import-file" accept=".json" style="display:none;" onchange="handleImport(event)">
+
+<!-- BG COLOR MODAL -->
+<div class="modal-overlay" id="bg-modal">
+  <div class="modal-box" style="width:380px;">
+    <h3>Warna Latar Canvas</h3>
+    <div id="bg-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeBgModal()">Tutup</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -2116,6 +2127,64 @@ function openColorModal(id){
 function closeColorModal(){document.getElementById('color-modal').classList.remove('open');}
 
 // ═══════════════════════════════════════════════
+//  BACKGROUND COLOR
+// ═══════════════════════════════════════════════
+const BG_PRESETS = [
+  { label:'Warm White',  bg:'#FFFCF8', dot:'rgba(0,59,53,0.10)', dark:false },
+  { label:'Pure White',  bg:'#FFFFFF', dot:'rgba(0,59,53,0.10)', dark:false },
+  { label:'Cream',       bg:'#FFF8E7', dot:'rgba(0,59,53,0.10)', dark:false },
+  { label:'Light Gray',  bg:'#F2F2F0', dot:'rgba(0,59,53,0.10)', dark:false },
+  { label:'Slate',       bg:'#1E2A3A', dot:'rgba(255,255,255,0.08)', dark:true  },
+  { label:'Forest',      bg:'#0D1F1A', dot:'rgba(255,255,255,0.08)', dark:true  },
+  { label:'Navy',        bg:'#0F172A', dot:'rgba(255,255,255,0.08)', dark:true  },
+  { label:'Charcoal',    bg:'#1C1C1E', dot:'rgba(255,255,255,0.07)', dark:true  },
+];
+
+function openBgModal() {
+  const grid = document.getElementById('bg-grid');
+  const current = localStorage.getItem('mi_bg') || '#FFFCF8';
+  grid.innerHTML = '';
+  BG_PRESETS.forEach(p => {
+    const btn = document.createElement('div');
+    const isActive = p.bg === current;
+    btn.style.cssText = `
+      height:60px; border-radius:8px; cursor:pointer;
+      background:${p.bg};
+      border: ${isActive ? '2.5px solid #FFA858' : '1.5px solid rgba(0,0,0,0.12)'};
+      display:flex; align-items:flex-end; justify-content:center;
+      padding-bottom:7px; transition:transform 0.12s;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+    `;
+    btn.innerHTML = `<span style="font-size:9.5px;font-weight:600;font-family:'Inter',sans-serif;color:${p.dark?'rgba(255,255,255,0.6)':'rgba(0,59,53,0.5)'};">${p.label}</span>`;
+    btn.onmouseenter = () => { btn.style.transform='scale(1.05)'; };
+    btn.onmouseleave = () => { btn.style.transform=''; };
+    btn.onclick = () => { applyBg(p); closeBgModal(); };
+    grid.appendChild(btn);
+  });
+  document.getElementById('bg-modal').classList.add('open');
+}
+
+function closeBgModal() { document.getElementById('bg-modal').classList.remove('open'); }
+
+function applyBg(preset) {
+  const wrap = document.getElementById('canvas-wrap');
+  wrap.style.background = preset.bg;
+  // Update dot pattern color
+  wrap.style.setProperty('--dot-color', preset.dot);
+  // Inject dynamic style for ::before
+  let styleTag = document.getElementById('bg-dot-style');
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = 'bg-dot-style';
+    document.head.appendChild(styleTag);
+  }
+  styleTag.textContent = `#canvas-wrap::before { background-image: radial-gradient(circle, ${preset.dot} 1.2px, transparent 1.2px) !important; }`;
+  localStorage.setItem('mi_bg', preset.bg);
+  localStorage.setItem('mi_bg_dot', preset.dot);
+  localStorage.setItem('mi_bg_dark', preset.dark ? '1' : '0');
+}
+
+// ═══════════════════════════════════════════════
 //  KEYBOARD
 // ═══════════════════════════════════════════════
 document.addEventListener('keydown',e=>{
@@ -2426,8 +2495,14 @@ window.addEventListener('load',()=>{
     b.textContent=aiProv==='openai'?'OpenAI':'Claude';
     b.className='api-badge set';
   }
+  // Restore background
+  const savedBg  = localStorage.getItem('mi_bg');
+  const savedDot = localStorage.getItem('mi_bg_dot');
+  if(savedBg && savedDot) {
+    const dark = localStorage.getItem('mi_bg_dark') === '1';
+    applyBg({ bg: savedBg, dot: savedDot, dark });
+  }
   updateVP();
-  // Mulai dari dashboard
   showDashboard();
 });
 </script>
