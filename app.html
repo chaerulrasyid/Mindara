@@ -1129,11 +1129,6 @@ kbd {
       <span style="color:var(--border)">│</span>
       <span id="node-count">0 node</span>
     </div>
-    <div id="shortcuts">
-      <kbd>Double-click</kbd> Edit &nbsp; <kbd>Tab</kbd> Cabang baru<br>
-      <kbd>Del</kbd> Hapus &nbsp; <kbd>Scroll</kbd> Zoom<br>
-      <kbd>Drag bg</kbd> Geser &nbsp; <kbd>Klik kanan</kbd> Menu
-    </div>
   </div>
 
   <!-- AI Panel -->
@@ -1776,17 +1771,8 @@ function getDemoMap(topic) {
       return DEMO_MAPS[key];
     }
   }
-  // Generic fallback
-  return {
-    root: topic,
-    branches: [
-      { label: 'Pengertian',    children: ['Definisi','Sejarah','Ruang Lingkup'] },
-      { label: 'Komponen Utama',children: ['Elemen 1','Elemen 2','Elemen 3'] },
-      { label: 'Manfaat',       children: ['Bagi Individu','Bagi Organisasi','Bagi Masyarakat'] },
-      { label: 'Tantangan',     children: ['Internal','Eksternal','Solusi'] },
-      { label: 'Implementasi',  children: ['Perencanaan','Eksekusi','Evaluasi'] },
-    ]
-  };
+  // No match — return root only, let user build manually
+  return { root: topic, branches: [] };
 }
 
 async function generateFromAI(topic) {
@@ -1822,7 +1808,11 @@ function buildMapFromData(data) {
 
   vx = 0; vy = 0; vs = 0.85;
   updateVP(); render(); checkEmpty();
-  toast(`✦ Peta "${data.root}" berhasil dibuat`);
+  if (data.branches?.length) {
+    toast(`✦ Peta "${data.root}" berhasil dibuat`);
+  } else {
+    toast('Node dibuat — tambah cabang manual atau pakai AI');
+  }
 }
 
 // ═══════════════════════════════════════════════
