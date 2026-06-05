@@ -572,9 +572,9 @@ footer {
     <div class="counter-dots">
       <div class="counter-dot active"></div>
       <div class="counter-dot active"></div>
-      <div class="counter-dot"></div>
+      <div class="counter-dot active"></div>
     </div>
-    <span><span class="counter-num" id="counter">–</span> orang sudah bergabung di waitlist</span>
+    <span>Sudah <span class="counter-num">20+</span> orang bergabung di waitlist</span>
   </div>
 </section>
 
@@ -872,17 +872,9 @@ function onSuccess(email, formId) {
     document.getElementById('waitlist-form-2').style.display  = 'none';
     document.getElementById('success-msg-2').style.display    = 'block';
   }
-  updateCounter();
   showToast('✓ Berhasil didaftarkan!');
 }
 
-// ── COUNTER ──────────────────────────────────────────────────────────────────
-function updateCounter() {
-  const el = document.getElementById('counter');
-  if (!el) return;
-  const local = JSON.parse(localStorage.getItem('mi_waitlist') || '[]').length;
-  el.textContent = local > 0 ? local : '–';
-}
 
 // ── SMOOTH SCROLL ────────────────────────────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -903,7 +895,6 @@ function showToast(msg) {
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', () => {
-  updateCounter();
   const list = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
   if (list.length > 0) {
     document.getElementById('waitlist-form-1').style.display = 'none';
