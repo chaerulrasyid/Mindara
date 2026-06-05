@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1438,6 +1439,7 @@ let apiKey  = localStorage.getItem('mi_key')  || '';
 let aiProv  = localStorage.getItem('mi_prov') || 'demo';
 let history = [], future = [];
 let autoSaveTimer = null;
+const isPreview = new URLSearchParams(window.location.search).has('preview');
 
 // ═══════════════════════════════════════════════
 //  WELCOME SCREEN
@@ -1492,6 +1494,7 @@ function saveCanvasesMeta(list) {
 }
 
 function showDashboard() {
+  if (isPreview) return;
   if (currentCanvasId) _saveToSlot(false);
   currentCanvasId = null;
   history = []; future = []; updateUndoRedo();
@@ -1713,7 +1716,7 @@ function setEditorTool(tool) {
 }
 
 function _saveToSlot(showToast = true) {
-  if (!currentCanvasId) return;
+  if (!currentCanvasId || isPreview) return;
   localStorage.setItem('mi_canvas_' + currentCanvasId, JSON.stringify({ nodes }));
   const list = getCanvases();
   const cv   = list.find(c => c.id === currentCanvasId);
@@ -2474,6 +2477,7 @@ function saveMap(){ _saveToSlot(true); }
 function loadMap(){ toast('Gunakan Dashboard untuk membuka canvas tersimpan.'); }
 
 function scheduleAutoSave() {
+  if (isPreview) return;
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(() => {
     if (!currentCanvasId) return;
@@ -2724,6 +2728,18 @@ function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 //  BOOT
 // ═══════════════════════════════════════════════
 window.addEventListener('load',()=>{
+  // Preview mode: embed demo map bersih untuk landing page
+  if (isPreview) {
+    applyGridSettings();
+    updateVP();
+    currentCanvasId = 'preview';
+    _enterEditor('Skripsi S1', false);
+    document.getElementById('ai-panel').classList.add('hidden');
+    nodes = {};
+    buildMapFromData(DEMO_MAPS['Skripsi S1']);
+    return;
+  }
+
   if(apiKey&&aiProv!=='demo'){
     const b=document.getElementById('api-badge');
     b.textContent=aiProv==='openai'?'OpenAI':'Claude';
