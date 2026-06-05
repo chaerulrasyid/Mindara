@@ -838,9 +838,7 @@ footer {
 </footer>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────────
-// Daftar di https://formspree.io lalu ganti URL di bawah:
-const FORMSPREE_URL = 'https://formspree.io/f/GANTI_DENGAN_FORM_ID_ANDA';
+const GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfybOXYDFIpu-yi9pbzJYnGQiLgzK0SVhBzB7NugVm69G9yXQ/formResponse';
 
 // ── WAITLIST SUBMIT ──────────────────────────────────────────────────────────
 async function submitWaitlist(e, formId) {
@@ -854,23 +852,13 @@ async function submitWaitlist(e, formId) {
   btn.disabled    = true;
   btn.textContent = 'Mendaftar...';
 
-  try {
-    if (!FORMSPREE_URL.includes('GANTI_DENGAN')) {
-      const res = await fetch(FORMSPREE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email, source: formId, product: 'Mindara' })
-      });
-      if (!res.ok) throw new Error();
-    } else {
-      await new Promise(r => setTimeout(r, 700));
-    }
-    onSuccess(email, formId);
-  } catch {
-    btn.disabled    = false;
-    btn.textContent = 'Daftar Gratis →';
-    showToast('Ups, coba lagi sebentar ya.');
-  }
+  // Kirim ke Google Forms via no-cors (tidak perlu response)
+  const fd = new FormData();
+  fd.append('emailAddress', email);
+  fetch(GFORM_URL, { method: 'POST', mode: 'no-cors', body: fd }).catch(() => {});
+
+  await new Promise(r => setTimeout(r, 600));
+  onSuccess(email, formId);
 }
 
 function onSuccess(email, formId) {
