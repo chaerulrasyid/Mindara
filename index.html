@@ -392,6 +392,80 @@ h2 {
   margin: 0 auto 14px;
 }
 
+/* ── PRICING ── */
+#pricing {
+  padding: 96px 24px;
+  background: var(--bg);
+}
+#pricing .container { text-align: center; }
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin-top: 0; text-align: left;
+  max-width: 860px; margin: 0 auto;
+}
+.plan {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 28px 26px;
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.plan-featured {
+  background: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 0 4px 24px rgba(255,168,88,0.15);
+}
+.plan-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: var(--text);
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px;
+  text-transform: uppercase; padding: 3px 12px; border-radius: 20px;
+  white-space: nowrap;
+}
+.plan-name {
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+}
+.plan-price {
+  font-size: 28px; font-weight: 900; color: var(--text);
+  letter-spacing: -1px; margin-bottom: 6px; line-height: 1;
+}
+.plan-price-sub {
+  font-size: 12px; color: var(--faint); margin-bottom: 22px;
+}
+.plan-divider {
+  height: 1px; background: var(--border); margin-bottom: 18px;
+}
+.plan ul {
+  list-style: none; display: flex; flex-direction: column;
+  gap: 10px; margin-bottom: 24px; flex: 1;
+}
+.plan ul li {
+  font-size: 13.5px; color: var(--muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.plan ul li::before {
+  content: '✓'; color: var(--accent);
+  font-weight: 800; flex-shrink: 0;
+}
+.plan ul li.disabled { opacity: 0.4; }
+.plan ul li.disabled::before { content: '–'; color: var(--faint); }
+.plan-cta {
+  display: block; text-align: center; padding: 10px 16px;
+  border-radius: 8px; font-size: 13.5px; font-weight: 700;
+  text-decoration: none; transition: all 0.12s;
+  border: 1.5px solid var(--border); color: var(--muted);
+  background: transparent; cursor: pointer; font-family: var(--font);
+}
+.plan-cta:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
+.plan-cta.primary {
+  background: var(--text); color: var(--bg); border-color: var(--text);
+}
+.plan-cta.primary:hover { background: #004F46; }
+@media (max-width: 640px) {
+  .pricing-grid { grid-template-columns: 1fr; }
+}
+
 /* ── FOOTER ── */
 footer {
   border-top: 1px solid var(--border);
@@ -482,16 +556,16 @@ footer {
     Ketik topik, masalah, atau hasil meeting — Mindara langsung susun jadi mind map terstruktur yang bisa kamu bawa ke rapat atau deck berikutnya. Dalam hitungan detik.
   </p>
 
-  <!-- CTA Buttons -->
-  <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-    <a href="https://forms.gle/EF9WQKcZHfSrvgst5" target="_blank" class="btn-waitlist" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 32px; font-size:15px;">
-      Daftar Early Access →
-    </a>
-    <p class="form-note">Gratis. Hanya butuh 30 detik via WhatsApp.</p>
-    <a href="app.html" target="_blank" class="btn-demo">
-      Atau coba demo dulu →
-    </a>
-  </div>
+  <!-- CTA Form -->
+  <form id="waitlist-form-1" class="waitlist-form" onsubmit="submitWaitlist(event,'form1')">
+    <input type="email" id="email-1" class="waitlist-input" placeholder="email@kamu.com" required />
+    <button type="submit" id="btn-1" class="btn-waitlist">Daftar Gratis →</button>
+  </form>
+  <p class="form-note">Gratis. Tidak perlu kartu kredit.</p>
+  <div id="success-msg">✓ Berhasil! Kami akan kabari kamu saat Mindara Pro siap.</div>
+  <a href="app.html" target="_blank" class="btn-demo">
+    Atau coba demo dulu →
+  </a>
 
   <!-- Social proof counter -->
   <div class="counter-wrap">
@@ -675,20 +749,83 @@ footer {
   </div>
 </section>
 
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Harga</div>
+    <h2 style="margin-bottom:48px;">Mulai gratis,<br>upgrade saat butuh lebih.</h2>
+    <div class="pricing-grid">
+
+      <div class="plan">
+        <div class="plan-name">Gratis</div>
+        <div class="plan-price">Rp 0</div>
+        <div class="plan-price-sub">Selamanya</div>
+        <div class="plan-divider"></div>
+        <ul>
+          <li>3 canvas</li>
+          <li>AI demo mode</li>
+          <li>Export JSON</li>
+          <li>Undo / redo</li>
+          <li class="disabled">AI penuh</li>
+          <li class="disabled">Export PNG & PDF</li>
+          <li class="disabled">Sharing via link</li>
+        </ul>
+        <a href="app.html" target="_blank" class="plan-cta">Mulai sekarang</a>
+      </div>
+
+      <div class="plan plan-featured">
+        <div class="plan-badge">Early Access</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price" style="font-size:20px;letter-spacing:-0.5px;">Segera hadir</div>
+        <div class="plan-price-sub">Harga spesial untuk early adopter</div>
+        <div class="plan-divider"></div>
+        <ul>
+          <li>Canvas unlimited</li>
+          <li>AI penuh (GPT-4o / Claude)</li>
+          <li>Export PNG & PDF</li>
+          <li>Sharing via link publik</li>
+          <li>Saran cabang dinamis</li>
+          <li class="disabled">Kolaborasi tim</li>
+        </ul>
+        <a href="#cta" class="plan-cta primary">Daftar Waitlist</a>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">Tim</div>
+        <div class="plan-price" style="font-size:20px;letter-spacing:-0.5px;">Segera hadir</div>
+        <div class="plan-price-sub">Untuk tim & organisasi</div>
+        <div class="plan-divider"></div>
+        <ul>
+          <li>Semua fitur Pro</li>
+          <li>Workspace bersama</li>
+          <li>Kolaborasi real-time</li>
+          <li>Manajemen anggota tim</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#cta" class="plan-cta">Daftar Waitlist</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- CTA BOTTOM -->
-<section id="cta">
+<section id="cta" style="background:var(--surface); border-top:1px solid var(--border);">
   <div class="container">
     <div class="section-label">Early Access</div>
     <h2>Rapat berikutnya,<br>struktur sudah siap.</h2>
-    <p>Daftar sekarang dan jadilah yang pertama akses Mindara penuh saat diluncurkan. Gratis untuk early adopter.</p>
+    <p>Daftar sekarang — kami kabari kamu saat Mindara Pro diluncurkan.</p>
 
-    <a href="https://forms.gle/EF9WQKcZHfSrvgst5" target="_blank" class="btn-waitlist" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 32px; font-size:15px; border-radius:8px;">
-      Daftar Early Access →
-    </a>
+    <form id="waitlist-form-2" class="waitlist-form-2" onsubmit="submitWaitlist(event,'form2')">
+      <input type="email" id="email-2" class="waitlist-input" placeholder="email@kamu.com" required />
+      <button type="submit" id="btn-2" class="btn-waitlist">Daftar Gratis</button>
+    </form>
+    <div id="success-msg-2" style="display:none; background:rgba(26,107,92,0.08); border:1.5px solid rgba(26,107,92,0.25); border-radius:8px; padding:14px 20px; font-size:14px; color:var(--text); font-weight:500; max-width:440px; margin:0 auto 16px; text-align:center;">
+      ✓ Berhasil! Kami akan kabari kamu saat Mindara Pro siap.
+    </div>
+    <p class="form-note" style="margin-top:8px;">Gratis. Tidak perlu kartu kredit.</p>
 
-    <p class="form-note" style="margin-top:12px;">Gratis selamanya untuk early adopter.</p>
-
-    <a href="app.html" target="_blank" class="btn-demo" style="margin-top:4px;">
+    <a href="app.html" target="_blank" class="btn-demo" style="margin-top:12px;">
       Atau coba demo dulu →
     </a>
   </div>
@@ -701,70 +838,62 @@ footer {
 </footer>
 
 <script>
-// ── WAITLIST SUBMIT ──────────────────────────────────────────────────────────
-// Ganti URL di bawah dengan Formspree URL Anda setelah daftar di formspree.io
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+// Daftar di https://formspree.io lalu ganti URL di bawah:
 const FORMSPREE_URL = 'https://formspree.io/f/GANTI_DENGAN_FORM_ID_ANDA';
 
+// ── WAITLIST SUBMIT ──────────────────────────────────────────────────────────
 async function submitWaitlist(e, formId) {
   e.preventDefault();
-
-  const emailId   = formId === 'form1' ? 'email-1' : 'email-2';
-  const btnId     = formId === 'form1' ? 'btn-1'   : 'btn-2';
-  const email     = document.getElementById(emailId).value.trim();
-  const btn       = document.getElementById(btnId);
-
+  const emailId = formId === 'form1' ? 'email-1' : 'email-2';
+  const btnId   = formId === 'form1' ? 'btn-1'   : 'btn-2';
+  const email   = document.getElementById(emailId).value.trim();
+  const btn     = document.getElementById(btnId);
   if (!email) return;
 
   btn.disabled    = true;
   btn.textContent = 'Mendaftar...';
 
   try {
-    // Cek apakah Formspree sudah dikonfigurasi
-    if (FORMSPREE_URL.includes('GANTI_DENGAN')) {
-      // Mode demo — simulasi sukses
-      await sleep(800);
-      onSuccess(email);
-    } else {
+    if (!FORMSPREE_URL.includes('GANTI_DENGAN')) {
       const res = await fetch(FORMSPREE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ email, source: formId, product: 'Mindara' })
       });
-      if (res.ok) {
-        onSuccess(email);
-      } else {
-        throw new Error('Form error');
-      }
+      if (!res.ok) throw new Error();
+    } else {
+      await new Promise(r => setTimeout(r, 700));
     }
+    onSuccess(email, formId);
   } catch {
     btn.disabled    = false;
-    btn.textContent = formId === 'form1' ? 'Daftar Waitlist' : 'Daftar Gratis';
+    btn.textContent = 'Daftar Gratis →';
     showToast('Ups, coba lagi sebentar ya.');
   }
 }
 
-function onSuccess(email) {
-  // Simpan di localStorage
+function onSuccess(email, formId) {
   const list = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
-  if (!list.includes(email)) list.push(email);
-  localStorage.setItem('mi_waitlist', JSON.stringify(list));
+  if (!list.includes(email)) { list.push(email); localStorage.setItem('mi_waitlist', JSON.stringify(list)); }
 
-  // Tampilkan pesan sukses
-  document.getElementById('waitlist-form-1').style.display = 'none';
-  document.getElementById('success-msg').style.display    = 'block';
-
-  // Update counter
+  if (formId === 'form1') {
+    document.getElementById('waitlist-form-1').style.display = 'none';
+    document.getElementById('success-msg').style.display     = 'block';
+  } else {
+    document.getElementById('waitlist-form-2').style.display  = 'none';
+    document.getElementById('success-msg-2').style.display    = 'block';
+  }
   updateCounter();
   showToast('✓ Berhasil didaftarkan!');
 }
 
 // ── COUNTER ──────────────────────────────────────────────────────────────────
 function updateCounter() {
-  // Ambil dari localStorage (untuk demo — di produksi ini dari API)
-  const list  = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
-  const base  = 47; // seed angka supaya tidak terlihat 0
-  const total = base + list.length;
-  document.getElementById('counter').textContent = total;
+  const el = document.getElementById('counter');
+  if (!el) return;
+  const local = JSON.parse(localStorage.getItem('mi_waitlist') || '[]').length;
+  el.textContent = local > 0 ? local : '–';
 }
 
 // ── SMOOTH SCROLL ────────────────────────────────────────────────────────────
@@ -784,17 +913,13 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 2500);
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
 // ── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', () => {
   updateCounter();
-
-  // Cek kalau sudah pernah daftar
   const list = JSON.parse(localStorage.getItem('mi_waitlist') || '[]');
   if (list.length > 0) {
     document.getElementById('waitlist-form-1').style.display = 'none';
-    document.getElementById('success-msg').style.display    = 'block';
+    document.getElementById('success-msg').style.display     = 'block';
   }
 });
 </script>
