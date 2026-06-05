@@ -260,27 +260,12 @@ h1 .highlight { color: var(--accent); }
   flex: 1; max-width: 260px;
 }
 
-/* Mini mindmap inside preview */
-.preview-canvas {
-  padding: 32px 20px;
-  min-height: 280px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-  background: var(--bg);
-  overflow: hidden;
-}
-.preview-canvas::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(0,59,53,0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Mini mindmap SVG */
-.mindmap-preview {
-  width: 100%; max-width: 680px;
-  height: 240px;
-  position: relative; z-index: 1;
+/* Live app iframe preview */
+.preview-iframe {
+  width: 100%;
+  height: 460px;
+  border: none;
+  display: block;
 }
 
 /* ── HOW IT WORKS ── */
@@ -618,78 +603,7 @@ footer {
       <div class="chrome-dot"></div>
       <div class="chrome-url">mindara.id</div>
     </div>
-    <div class="preview-canvas">
-      <svg class="mindmap-preview" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="root-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#003B35"/>
-            <stop offset="100%" stop-color="#004F46"/>
-          </linearGradient>
-          <linearGradient id="b1-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFA858"/>
-            <stop offset="100%" stop-color="#FFB870"/>
-          </linearGradient>
-          <linearGradient id="b2-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1A6B5C"/>
-            <stop offset="100%" stop-color="#228A78"/>
-          </linearGradient>
-          <linearGradient id="b3-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#C97030"/>
-            <stop offset="100%" stop-color="#DD8040"/>
-          </linearGradient>
-          <linearGradient id="b4-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#004A42"/>
-            <stop offset="100%" stop-color="#006055"/>
-          </linearGradient>
-        </defs>
-
-        <!-- Edges -->
-        <path d="M340 120 C280 120 200 80 155 70" fill="none" stroke="#FFA858" stroke-width="2" opacity="0.45"/>
-        <path d="M340 120 C290 120 230 95 190 105" fill="none" stroke="#1A6B5C" stroke-width="2" opacity="0.45"/>
-        <path d="M340 120 C390 120 450 95 490 105" fill="none" stroke="#C97030" stroke-width="2" opacity="0.45"/>
-        <path d="M340 120 C390 120 460 120 525 70" fill="none" stroke="#004A42" stroke-width="2" opacity="0.45"/>
-
-        <!-- Child edges -->
-        <path d="M155 70 C120 70 95 52 75 48" fill="none" stroke="#FFA858" stroke-width="1.5" opacity="0.3"/>
-        <path d="M155 70 C120 70 95 82 75 88" fill="none" stroke="#FFA858" stroke-width="1.5" opacity="0.3"/>
-        <path d="M490 105 C520 105 545 88 565 84" fill="none" stroke="#C97030" stroke-width="1.5" opacity="0.3"/>
-        <path d="M490 105 C520 105 545 118 565 122" fill="none" stroke="#C97030" stroke-width="1.5" opacity="0.3"/>
-
-        <!-- Root node -->
-        <rect x="270" y="96" width="140" height="48" rx="10" fill="url(#root-g)"/>
-        <text x="340" y="120" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Skripsi S1</text>
-
-        <!-- Branch nodes -->
-        <rect x="95" y="52" width="120" height="36" rx="7" fill="url(#b1-g)"/>
-        <text x="155" y="70" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Pendahuluan</text>
-
-        <rect x="110" y="86" width="120" height="36" rx="7" fill="url(#b2-g)"/>
-        <text x="170" y="104" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Kajian Pustaka</text>
-
-        <rect x="410" y="86" width="120" height="36" rx="7" fill="url(#b3-g)"/>
-        <text x="470" y="104" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Metodologi</text>
-
-        <rect x="445" y="52" width="120" height="36" rx="7" fill="url(#b4-g)"/>
-        <text x="505" y="70" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Hasil & Bahasan</text>
-
-        <!-- Child nodes -->
-        <rect x="10" y="32" width="90" height="30" rx="5" fill="#FFA858" opacity="0.85"/>
-        <text x="55" y="47" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Latar Belakang</text>
-
-        <rect x="10" y="72" width="90" height="30" rx="5" fill="#FFA858" opacity="0.85"/>
-        <text x="55" y="87" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#003B35" text-anchor="middle" dominant-baseline="middle">Rumusan Masalah</text>
-
-        <rect x="560" y="68" width="90" height="30" rx="5" fill="#C97030" opacity="0.85"/>
-        <text x="605" y="83" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Analisis Data</text>
-
-        <rect x="560" y="106" width="90" height="30" rx="5" fill="#C97030" opacity="0.85"/>
-        <text x="605" y="121" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#FFFCF8" text-anchor="middle" dominant-baseline="middle">Hasil Uji</text>
-
-        <!-- AI badge -->
-        <rect x="270" y="160" width="140" height="28" rx="14" fill="rgba(255,168,88,0.15)" stroke="rgba(255,168,88,0.4)" stroke-width="1"/>
-        <text x="340" y="174" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#E8914A" text-anchor="middle" dominant-baseline="middle">✦ Dibuat AI dalam 2 detik</text>
-      </svg>
-    </div>
+    <iframe src="app.html" class="preview-iframe" title="Mindara App Preview" allowfullscreen></iframe>
   </div>
 </section>
 
