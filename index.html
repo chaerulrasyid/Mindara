@@ -380,74 +380,133 @@ h2 {
 /* ── PRICING ── */
 #pricing {
   padding: 96px 24px;
-  background: var(--bg);
+  background: #EEEDF5;
 }
 #pricing .container { text-align: center; }
+
+/* Toggle */
+.billing-toggle {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 40px; font-size: 14px; font-weight: 500; color: var(--text);
+}
+.toggle-switch {
+  position: relative; width: 42px; height: 24px; cursor: pointer;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: #C8C5D8; border-radius: 12px; transition: background 0.2s;
+}
+.toggle-switch input:checked + .toggle-track { background: var(--text); }
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked ~ .toggle-thumb { transform: translateX(18px); }
+.billing-badge {
+  background: #6B5CFF; color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.2px;
+}
+.billing-label { color: var(--muted); }
+.billing-label.active { color: var(--text); font-weight: 700; }
+
 .pricing-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 20px; margin-top: 0; text-align: left;
-  max-width: 860px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; text-align: left;
+  max-width: 1080px; margin: 0 auto;
 }
+
 .plan {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 28px 26px;
-  display: flex; flex-direction: column; gap: 0;
+  background: #fff;
+  border: 1.5px solid rgba(0,0,0,0.06);
+  border-radius: 16px; padding: 24px 22px 22px;
+  display: flex; flex-direction: column;
   position: relative;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  transition: box-shadow 0.15s;
 }
+.plan:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.09); }
+
 .plan-featured {
-  background: var(--bg);
-  border-color: var(--accent);
-  box-shadow: 0 4px 24px rgba(255,168,88,0.15);
+  border: 2px solid #6B5CFF;
+  box-shadow: 0 4px 24px rgba(107,92,255,0.15);
 }
+.plan-featured:hover { box-shadow: 0 8px 36px rgba(107,92,255,0.22); }
+
 .plan-badge {
-  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-  background: var(--accent); color: var(--text);
-  font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px;
-  text-transform: uppercase; padding: 3px 12px; border-radius: 20px;
-  white-space: nowrap;
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #7C6FFF 0%, #5B4EE8 100%);
+  color: #fff;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  padding: 4px 14px; border-radius: 20px;
+  white-space: nowrap; box-shadow: 0 2px 10px rgba(107,92,255,0.35);
 }
+
+.plan-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.plan-category {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: #888; font-weight: 500;
+}
+.plan-category svg { width: 14px; height: 14px; opacity: 0.6; }
+.plan-crown { font-size: 18px; line-height: 1; }
+
 .plan-name {
-  font-size: 13px; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+  font-size: 26px; font-weight: 800; color: var(--text);
+  letter-spacing: -0.8px; margin-bottom: 4px; line-height: 1.1;
 }
 .plan-price {
-  font-size: 28px; font-weight: 900; color: var(--text);
-  letter-spacing: -1px; margin-bottom: 6px; line-height: 1;
+  font-size: 22px; font-weight: 800; color: var(--text);
+  letter-spacing: -0.5px; margin-bottom: 2px; line-height: 1.2;
 }
+.plan-price .price-amount { font-size: 28px; }
 .plan-price-sub {
-  font-size: 12px; color: var(--faint); margin-bottom: 22px;
+  font-size: 12px; color: var(--faint); margin-bottom: 20px; min-height: 16px;
 }
 .plan-divider {
-  height: 1px; background: var(--border); margin-bottom: 18px;
+  height: 1px; background: #F0EEF8; margin-bottom: 16px;
 }
 .plan ul {
   list-style: none; display: flex; flex-direction: column;
-  gap: 10px; margin-bottom: 24px; flex: 1;
+  gap: 9px; margin-bottom: 22px; flex: 1;
 }
 .plan ul li {
-  font-size: 13.5px; color: var(--muted);
-  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--muted);
+  display: flex; align-items: flex-start; gap: 7px; line-height: 1.4;
 }
 .plan ul li::before {
-  content: '✓'; color: var(--accent);
-  font-weight: 800; flex-shrink: 0;
+  content: '✓'; color: #6B5CFF;
+  font-weight: 800; flex-shrink: 0; margin-top: 1px; font-size: 12px;
 }
-.plan ul li.disabled { opacity: 0.4; }
+.plan ul li.disabled { opacity: 0.35; }
 .plan ul li.disabled::before { content: '–'; color: var(--faint); }
+
 .plan-cta {
   display: block; text-align: center; padding: 10px 16px;
-  border-radius: 8px; font-size: 13.5px; font-weight: 700;
+  border-radius: 9px; font-size: 13.5px; font-weight: 700;
   text-decoration: none; transition: all 0.12s;
-  border: 1.5px solid var(--border); color: var(--muted);
+  border: 1.5px solid #E0DCF0; color: var(--muted);
   background: transparent; cursor: pointer; font-family: var(--font);
 }
-.plan-cta:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
+.plan-cta:hover { border-color: var(--text); color: var(--text); background: #F5F3FF; }
 .plan-cta.primary {
+  background: #6B5CFF; color: #fff; border-color: #6B5CFF;
+}
+.plan-cta.primary:hover { background: #5B4EE8; border-color: #5B4EE8; }
+.plan-cta.dark {
   background: var(--text); color: var(--bg); border-color: var(--text);
 }
-.plan-cta.primary:hover { background: #004F46; }
-@media (max-width: 640px) {
+.plan-cta.dark:hover { background: #004F46; }
+
+@media (max-width: 900px) {
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
   .pricing-grid { grid-template-columns: 1fr; }
 }
 
@@ -667,16 +726,36 @@ footer {
 <section id="pricing">
   <div class="container">
     <div class="section-label">Harga</div>
-    <h2 style="margin-bottom:48px;">Mulai gratis,<br>upgrade saat butuh lebih.</h2>
+    <h2 style="margin-bottom:32px;">Mulai gratis,<br>upgrade saat butuh lebih.</h2>
+
+    <!-- Billing Toggle -->
+    <div class="billing-toggle">
+      <span class="billing-label active" id="lbl-monthly">Bulanan</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="billing-toggle" onchange="switchBilling()">
+        <span class="toggle-track"></span>
+        <span class="toggle-thumb"></span>
+      </label>
+      <span class="billing-label" id="lbl-yearly">Tahunan</span>
+      <span class="billing-badge">Hemat 16%</span>
+    </div>
+
     <div class="pricing-grid">
 
+      <!-- FREE -->
       <div class="plan">
+        <div class="plan-header">
+          <div class="plan-category">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Individu
+          </div>
+        </div>
         <div class="plan-name">Gratis</div>
-        <div class="plan-price">Rp 0</div>
-        <div class="plan-price-sub">Selamanya</div>
+        <div class="plan-price"><span class="price-amount">Rp 0</span></div>
+        <div class="plan-price-sub">Selamanya, tanpa kartu kredit</div>
         <div class="plan-divider"></div>
         <ul>
-          <li>3 canvas</li>
+          <li>3 canvas aktif</li>
           <li>AI demo mode</li>
           <li>Export JSON</li>
           <li>Undo / redo</li>
@@ -687,36 +766,80 @@ footer {
         <a href="app.html" target="_blank" class="plan-cta">Mulai sekarang</a>
       </div>
 
-      <div class="plan plan-featured">
-        <div class="plan-badge">Early Access</div>
+      <!-- PRO -->
+      <div class="plan">
+        <div class="plan-header">
+          <div class="plan-category">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Individu
+          </div>
+          <div class="plan-crown">👑</div>
+        </div>
         <div class="plan-name">Pro</div>
-        <div class="plan-price" style="font-size:20px;letter-spacing:-0.5px;">Segera hadir</div>
-        <div class="plan-price-sub">Harga spesial untuk early adopter</div>
+        <div class="plan-price" id="price-pro"><span class="price-amount">Rp 79rb</span></div>
+        <div class="plan-price-sub" id="sub-pro">per bulan — harga early adopter</div>
         <div class="plan-divider"></div>
         <ul>
           <li>Canvas unlimited</li>
-          <li>AI penuh (GPT-4o / Claude)</li>
+          <li>AI penuh (Claude / GPT-4o)</li>
           <li>Export PNG & PDF</li>
           <li>Sharing via link publik</li>
           <li>Saran cabang dinamis</li>
           <li class="disabled">Kolaborasi tim</li>
+          <li class="disabled">Workspace bersama</li>
+        </ul>
+        <a href="#cta" class="plan-cta">Daftar Waitlist</a>
+      </div>
+
+      <!-- BUSINESS (RECOMMENDED) -->
+      <div class="plan plan-featured">
+        <div class="plan-badge">Direkomendasikan</div>
+        <div class="plan-header">
+          <div class="plan-category">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="19" cy="8" r="3"/><path d="M21 19c0-2.8-2-5-4.5-5"/></svg>
+            Individu & Tim
+          </div>
+          <div class="plan-crown">👑</div>
+        </div>
+        <div class="plan-name">Bisnis</div>
+        <div class="plan-price" id="price-biz"><span class="price-amount">Rp 199rb</span></div>
+        <div class="plan-price-sub" id="sub-biz">per bulan, hingga 5 anggota</div>
+        <div class="plan-divider"></div>
+        <ul>
+          <li>Semua fitur Pro</li>
+          <li>Workspace bersama tim</li>
+          <li>Kolaborasi real-time</li>
+          <li>Manajemen anggota (5 kursi)</li>
+          <li>Priority support</li>
+          <li>Onboarding sesi 1-on-1</li>
+          <li>Riwayat versi canvas</li>
         </ul>
         <a href="#cta" class="plan-cta primary">Daftar Waitlist</a>
       </div>
 
+      <!-- ENTERPRISE -->
       <div class="plan">
-        <div class="plan-name">Tim</div>
-        <div class="plan-price" style="font-size:20px;letter-spacing:-0.5px;">Segera hadir</div>
-        <div class="plan-price-sub">Untuk tim & organisasi</div>
+        <div class="plan-header">
+          <div class="plan-category">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            Organisasi
+          </div>
+          <div class="plan-crown">👑</div>
+        </div>
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price"><span class="price-amount" style="font-size:20px;letter-spacing:-0.3px;">Hubungi Kami</span></div>
+        <div class="plan-price-sub">Harga khusus, kursi tidak terbatas</div>
         <div class="plan-divider"></div>
         <ul>
-          <li>Semua fitur Pro</li>
-          <li>Workspace bersama</li>
-          <li>Kolaborasi real-time</li>
-          <li>Manajemen anggota tim</li>
-          <li>Priority support</li>
+          <li>Semua fitur Bisnis</li>
+          <li>Kursi tidak terbatas</li>
+          <li>SSO & integrasi custom</li>
+          <li>SLA & uptime guarantee</li>
+          <li>Dedicated account manager</li>
+          <li>Pelatihan & implementasi</li>
+          <li>Kontrak & invoice fleksibel</li>
         </ul>
-        <a href="#cta" class="plan-cta">Daftar Waitlist</a>
+        <a href="mailto:hello@mindara.id" class="plan-cta dark">Hubungi Sales</a>
       </div>
 
     </div>
@@ -789,6 +912,22 @@ function onSuccess(email, formId) {
   showToast('✓ Berhasil didaftarkan!');
 }
 
+
+// ── BILLING TOGGLE ───────────────────────────────────────────────────────────
+const PRICES = {
+  monthly: { pro: 'Rp 79rb', biz: 'Rp 199rb', subPro: 'per bulan — harga early adopter', subBiz: 'per bulan, hingga 5 anggota' },
+  yearly:  { pro: 'Rp 66rb', biz: 'Rp 167rb', subPro: 'per bulan, tagih tahunan', subBiz: 'per bulan, tagih tahunan (5 kursi)' }
+};
+function switchBilling() {
+  const yearly = document.getElementById('billing-toggle').checked;
+  const p = PRICES[yearly ? 'yearly' : 'monthly'];
+  document.querySelector('#price-pro .price-amount').textContent  = p.pro;
+  document.querySelector('#price-biz .price-amount').textContent  = p.biz;
+  document.getElementById('sub-pro').textContent = p.subPro;
+  document.getElementById('sub-biz').textContent = p.subBiz;
+  document.getElementById('lbl-monthly').classList.toggle('active', !yearly);
+  document.getElementById('lbl-yearly').classList.toggle('active',  yearly);
+}
 
 // ── SMOOTH SCROLL ────────────────────────────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
